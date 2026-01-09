@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>AUCTORIS · Incidente Cibernético · Painel Institucional</title>
+
+<style>
+:root{
+  --bg0:#070b12; --bg1:#0a101b; --panel:#0d1422; --ink:#e7eefc; --muted:#a8b6d3;
+  --line:rgba(180,205,255,.12); --accent:#2a5cff; --accent2:#0f2b7a;
+  --amber:#d3a74b; --red:#d05b5b; --ok:#6fe0b8;
+  --radius:18px; --radius2:24px; --shadow:0 24px 80px rgba(0,0,0,.65);
+  --max:1200px; --pad:20px; --topbarH:68px; --footerH:64px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font-family:var(--sans); color:var(--ink);
+  background:
+    radial-gradient(1200px 700px at 20% -10%, rgba(42,92,255,.18), transparent 60%),
+    radial-gradient(900px 600px at 110% 0%, rgba(34,109,255,.14), transparent 55%),
+    linear-gradient(180deg,var(--bg0),var(--bg1));
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+.bg-grid{
+  position:fixed; inset:0; pointer-events:none; z-index:-1;
+  background-image:
+    linear-gradient(to right, rgba(180,205,255,.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(180,205,255,.06) 1px, transparent 1px);
+  background-size:56px 56px; opacity:.35;
+  mask-image: radial-gradient(circle at 55% 25%, black, transparent 70%);
+}
+.topbar{
+  position:fixed; inset:0 0 auto 0; height:var(--topbarH); z-index:50;
+  background:linear-gradient(180deg, rgba(7,11,18,.92), rgba(7,11,18,.68));
+  backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
+}
+.topbar .inner{
+  max-width:var(--max); height:100%; margin:0 auto; padding:0 var(--pad);
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+}
+.brand{display:flex; align-items:baseline; gap:12px}
+.brand .logo{letter-spacing:.24em; font-weight:800; font-size:13px}
+.brand .sub{font-size:12px; color:var(--muted)}
+.nav{display:flex; gap:10px}
+.btn{
+  padding:10px 14px; border-radius:12px; border:1px solid var(--line);
+  background:rgba(255,255,255,.03); font-size:13px; cursor:pointer;
+}
+.wrap{
+  max-width:var(--max); margin:0 auto;
+  padding: calc(var(--topbarH) + 28px) var(--pad) calc(var(--footerH) + 36px);
+}
+.hero{
+  border-radius:var(--radius2); border:1px solid var(--line);
+  background:
+    radial-gradient(720px 360px at 20% 10%, rgba(42,92,255,.22), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  box-shadow:var(--shadow); padding:32px;
+}
+.hero h1{margin:0; font-size:44px; line-height:1.04}
+.hero h1 span{display:block; margin-top:10px; font-size:18px; color:var(--muted)}
+.hero p{margin:18px 0 0; max-width:72ch; line-height:1.6}
+.kicker{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px}
+.pill{
+  font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  padding:7px 10px; border-radius:999px; border:1px solid var(--line);
+  background:rgba(255,255,255,.03); color:var(--muted);
+}
+.section{margin-top:22px}
+.status{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+}
+.stat{
+  border:1px solid var(--line); border-radius:var(--radius);
+  padding:16px; background:rgba(255,255,255,.02);
+}
+.stat .t{font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+.stat .v{font-size:16px; font-weight:800; margin:6px 0}
+.v-amber{color:var(--amber)} .v-red{color:var(--red)} .v-blue{color:var(--accent)}
+.cards{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+}
+.card{
+  border:1px solid var(--line); border-radius:var(--radius2);
+  padding:18px; background:rgba(255,255,255,.02);
+}
+.card h3{margin:0 0 8px; font-size:16px}
+.card p{margin:0; color:var(--muted); line-height:1.55}
+.protected{
+  margin-top:18px; border:1px dashed var(--line); border-radius:var(--radius2);
+  padding:18px; background:rgba(255,255,255,.02);
+}
+.footer{
+  position:fixed; left:0; right:0; bottom:0; height:var(--footerH);
+  background:linear-gradient(0deg, rgba(7,11,18,.92), rgba(7,11,18,.66));
+  border-top:1px solid var(--line);
+}
+.footer .inner{
+  max-width:var(--max); height:100%; margin:0 auto; padding:0 var(--pad);
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+  font-size:12px; color:var(--muted);
+}
+
+/* CHATBOT – PADRÃO INDEX */
+.chatBot{position:fixed; right:26px; bottom:26px; z-index:200}
+.chatBubble{
+  width:80px; height:80px; border-radius:50%;
+  background:linear-gradient(135deg, rgba(42,92,255,.55), rgba(15,43,122,.45));
+  border:2px solid rgba(42,92,255,.65);
+  box-shadow:0 20px 70px rgba(0,0,0,.7);
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+  position:relative;
+}
+.chatPulse{
+  position:absolute; inset:-2px; border-radius:50%;
+  border:2px solid rgba(42,92,255,.6); animation:pulse 2.4s infinite;
+}
+@keyframes pulse{0%{transform:scale(1);opacity:1}100%{transform:scale(1.45);opacity:0}}
+.chatBubble svg{width:42px;height:42px;fill:#eef3ff}
+.chatWindow{
+  position:fixed; right:26px; bottom:128px;
+  width:560px; height:720px; max-width:calc(100vw - 52px);
+  background:rgba(10,16,27,.96);
+  border:1px solid var(--line); border-radius:28px;
+  box-shadow:0 34px 100px rgba(0,0,0,.8);
+  opacity:0; transform:translateY(24px) scale(.94); pointer-events:none;
+  transition:.3s; display:flex; flex-direction:column;
+}
+.chatWindow.active{opacity:1; transform:translateY(0) scale(1); pointer-events:auto}
+.chatHeader{
+  padding:22px; border-bottom:1px solid var(--line);
+  background:linear-gradient(135deg, rgba(42,92,255,.18), rgba(15,43,122,.12));
+}
+.chatHeader h3{margin:0; font-size:16px}
+.chatHeader p{margin:4px 0 0; font-size:12px; color:var(--muted)}
+.chatBody{padding:26px; overflow-y:auto; flex:1}
+.msg{margin-bottom:18px}
+.bubble{
+  border:1px solid var(--line); border-radius:18px; padding:16px;
+  font-size:14px; line-height:1.6; background:rgba(255,255,255,.03);
+}
+.options{display:grid; gap:10px; margin-top:12px}
+.option{
+  border:1px solid var(--line); border-radius:14px; padding:14px;
+  font-size:13px; cursor:pointer; background:rgba(255,255,255,.02);
+}
+.option:hover{background:rgba(42,92,255,.12); border-color:rgba(42,92,255,.45)}
+.reco{
+  margin-top:14px; border-radius:16px; padding:14px;
+  background:linear-gradient(135deg, rgba(42,92,255,.22), rgba(15,43,122,.14));
+}
+.reco a{
+  display:inline-block; margin-top:10px; padding:10px 14px;
+  border-radius:10px; border:1px solid rgba(42,92,255,.55);
+  font-size:12px;
+}
+@media(max-width:900px){
+  .status,.cards{grid-template-columns:1fr}
+  .chatWindow{height:620px}
+}
+</style>
+</head>
+
+<body>
+<div class="bg-grid"></div>
+
+<header class="topbar">
+  <div class="inner">
+    <div class="brand">
+      <div class="logo">AUCTORIS</div>
+      <div class="sub">Painel institucional · acesso restrito</div>
+    </div>
+    <nav class="nav">
+      <a class="btn" href="index.html">Home</a>
+      <a class="btn" href="radar.html">Radar</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="kicker">
+      <span class="pill">Incidente cibernético</span>
+      <span class="pill">Decisão · Prova · Narrativa</span>
+      <span class="pill">Amostra institucional</span>
+    </div>
+    <h1>
+      Incidente Cibernético
+      <span>Painel de decisão para diretoria e conselho</span>
+    </h1>
+    <p>
+      Este painel apresenta a leitura institucional aplicada às primeiras horas de um
+      incidente cibernético. O foco recai sobre comando decisório, preservação mínima de
+      prova e coerência narrativa. A versão completa é personalizada por organização.
+    </p>
+  </section>
+
+  <section class="section status">
+    <div class="stat">
+      <div class="t">Status do evento</div>
+      <div class="v v-amber">Em apuração</div>
+      <p class="muted">Registro ativo por marcos decisórios</p>
+    </div>
+    <div class="stat">
+      <div class="t">Risco dominante</div>
+      <div class="v v-red">Perda de prova</div>
+      <p class="muted">Irreversibilidade e fragilidade futura</p>
+    </div>
+    <div class="stat">
+      <div class="t">Prioridade executiva</div>
+      <div class="v v-blue">Decisão rastreável</div>
+      <p class="muted">Unidade de comando e registros mínimos</p>
+    </div>
+  </section>
+
+  <section class="section cards">
+    <div class="card">
+      <h3>Governança</h3>
+      <p>Quem decide, quando decide e como isso fica documentado.</p>
+    </div>
+    <div class="card">
+      <h3>Prova</h3>
+      <p>Preservação mínima nas primeiras horas para reduzir risco regulatório.</p>
+    </div>
+    <div class="card">
+      <h3>Narrativa</h3>
+      <p>Comunicação institucional coerente e defensável.</p>
+    </div>
+  </section>
+
+  <section class="protected">
+    Conteúdo integral — sequências decisórias, respostas ao conselho e critérios
+    regulatórios — disponível apenas em versões autorizadas e personalizadas por organização.
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="inner">
+    <div>Guilherme Rafael de Souza Araujo · Advogado · Pesquisador</div>
+    <div>Conteúdo informativo · não constitui parecer</div>
+  </div>
+</footer>
+
+<div class="chatBot">
+  <div class="chatBubble" id="chatToggle">
+    <div class="chatPulse"></div>
+    <svg viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10"/>
+      <circle cx="9" cy="10" r="1.5"/>
+      <circle cx="15" cy="10" r="1.5"/>
+    </svg>
+  </div>
+
+  <div class="chatWindow" id="chatWindow">
+    <div class="chatHeader">
+      <h3>Assistente AUCTORIS</h3>
+      <p>Leitura decisória institucional</p>
+    </div>
+    <div class="chatBody" id="chatBody"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const toggle=document.getElementById('chatToggle');
+  const win=document.getElementById('chatWindow');
+  const body=document.getElementById('chatBody');
+  let started=false;
+
+  const flows={
+    start:{
+      msg:"Este painel é uma amostra institucional. Selecione o foco para navegação:",
+      opts:[
+        {t:"📊 Entender o Termômetro Regulatório",n:"termometro"},
+        {t:"🚨 Resposta a incidente cibernético",n:"incident"},
+        {t:"⚖️ Padrões sancionatórios",n:"radar"},
+        {t:"🎓 Formação executiva",n:"training"}
+      ]
+    },
+    termometro:{
+      msg:"O Termômetro Regulatório é a camada pública de leitura contínua do ambiente regulatório.",
+      reco:{h:"Termômetro Regulatório",d:"Leitura pública mensal de sinais regulatórios.",l:"termometro.html"}
+    },
+    incident:{
+      msg:"Este painel demonstra a lógica decisória aplicada às primeiras horas de um incidente.",
+      reco:{h:"Painel de Incidente",d:"Versão completa é personalizada por organização.",l:"mailto:guilhermersaraujo@proton.me"}
+    },
+    radar:{
+      msg:"O Radar Sancionador organiza padrões decisórios e recorrências sancionatórias.",
+      reco:{h:"Radar Sancionador",d:"Acesso controlado por organização.",l:"radar.html"}
+    },
+    training:{
+      msg:"Formação executiva voltada a decisão, prova e proteção institucional.",
+      reco:{h:"Governança Pós-Incidente",d:"Palestra institucional para conselhos.",l:"palestra.html"}
+    }
+  };
+
+  function add(msg,opts,reco){
+    const m=document.createElement('div'); m.className='msg';
+    let html=`<div class="bubble">${msg}</div>`;
+    if(opts){
+      html+=`<div class="options">${opts.map(o=>`<div class="option" data-next="${o.n}">${o.t}</div>`).join("")}</div>`;
+    }
+    if(reco){
+      html+=`<div class="reco"><strong>${reco.h}</strong><p>${reco.d}</p><a href="${reco.l}">Acessar</a></div>`;
+    }
+    m.innerHTML=html; body.appendChild(m); body.scrollTop=body.scrollHeight;
+    m.querySelectorAll('.option').forEach(b=>b.onclick=()=>step(b.dataset.next));
+  }
+
+  function step(k){
+    const f=flows[k];
+    if(!f) return;
+    add(f.msg,f.opts,f.reco);
+  }
+
+  toggle.onclick=()=>{
+    win.classList.add('active');
+    if(!started){
+      step('start');
+      started=true;
+    }
+  };
+})();
+</script>
+
+</body>
+</html>

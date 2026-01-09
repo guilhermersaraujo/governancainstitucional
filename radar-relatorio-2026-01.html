@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>AUCTORIS — Radar Sancionador | Relatório Institucional (Amostra)</title>
+
+<style>
+:root{
+  --bg:#05080f;
+  --bg2:#0a1222;
+  --panel:#0e1a33;
+  --ink:#eef3ff;
+  --muted:#b9c4e6;
+  --line:rgba(255,255,255,.10);
+  --accent:#6ea8ff;
+  --accent-soft:#a9c5ff;
+  --risk-high:#ff6b6b;
+  --risk-mid:#ffcf70;
+  --risk-low:#5ee6b3;
+  --radius:22px;
+  --shadow:0 30px 80px rgba(0,0,0,.55);
+  --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:var(--sans);
+  color:var(--ink);
+  background:
+    radial-gradient(1200px 600px at 70% 5%, rgba(110,168,255,.18), transparent 55%),
+    radial-gradient(1000px 700px at 20% 90%, rgba(110,168,255,.10), transparent 60%),
+    linear-gradient(180deg,var(--bg),var(--bg2) 55%,var(--bg));
+}
+
+/* GRID */
+.gridFX{
+  position:fixed; inset:0; pointer-events:none;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size:64px 64px;
+  opacity:.35;
+  mask-image:radial-gradient(circle at 50% 15%, black 38%, transparent 70%);
+}
+
+/* TOPBAR */
+.topbar{
+  position:sticky; top:0; z-index:40;
+  backdrop-filter:blur(14px);
+  background:rgba(5,8,15,.88);
+  border-bottom:1px solid var(--line);
+}
+.topbar .inner{
+  max-width:1200px;
+  margin:0 auto;
+  padding:16px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.brand{display:flex;flex-direction:column}
+.brand strong{
+  font-size:12px;
+  letter-spacing:.32em;
+  text-transform:uppercase;
+}
+.brand span{
+  font-size:12px;
+  color:var(--muted);
+}
+.nav a{
+  margin-left:22px;
+  font-size:12px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--accent-soft);
+  text-decoration:none;
+  border-bottom:1px solid rgba(110,168,255,.35);
+}
+.nav a:hover{border-bottom-color:rgba(110,168,255,.9)}
+
+/* CONTAINER */
+.wrap{
+  max-width:1200px;
+  margin:0 auto;
+  padding:32px 20px 140px;
+}
+
+/* HERO */
+.hero{
+  border-radius:var(--radius);
+  border:1px solid var(--line);
+  background:linear-gradient(135deg, rgba(110,168,255,.22), rgba(14,26,51,.85) 50%);
+  box-shadow:var(--shadow);
+  padding:40px;
+}
+.hero .kicker{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.75);
+}
+.hero h1{
+  margin:14px 0 10px;
+  font-size:40px;
+  line-height:1.15;
+  font-weight:900;
+}
+.hero h1 em{color:var(--accent);font-style:normal}
+.hero p{
+  margin:0;
+  max-width:75ch;
+  font-size:16px;
+  line-height:1.7;
+  color:var(--muted);
+}
+
+/* SECTION */
+.section{margin-top:40px}
+.section h2{font-size:22px;margin-bottom:16px}
+
+/* TEXT */
+.textBox{
+  border-radius:22px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.035);
+  padding:26px;
+}
+.textBox p{
+  margin:0;
+  font-size:15px;
+  line-height:1.75;
+  color:var(--muted);
+}
+
+/* NOTICE */
+.notice{
+  margin-top:36px;
+  border-radius:22px;
+  border:1px solid rgba(255,207,112,.45);
+  background:rgba(255,207,112,.10);
+  padding:22px;
+}
+.notice b{
+  display:block;
+  font-family:var(--mono);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--risk-mid);
+  margin-bottom:8px;
+}
+.notice span{
+  font-size:14px;
+  color:rgba(255,255,255,.85);
+}
+
+/* FOOTER */
+.footer{
+  margin-top:48px;
+  border-top:1px solid var(--line);
+  padding-top:22px;
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:22px;
+}
+.footer .author b{display:block}
+.footer .author span{
+  font-size:13px;
+  color:var(--muted);
+}
+.footer .legal{
+  max-width:65ch;
+  font-size:12px;
+  color:rgba(255,255,255,.65);
+}
+.footer a{
+  color:var(--accent-soft);
+  text-decoration:none;
+  border-bottom:1px solid rgba(110,168,255,.35);
+}
+
+/* ================= CHATBOT AUCTORIS — PADRÃO INDEX ================= */
+.chatBot{
+  position:fixed;
+  bottom:28px;
+  right:28px;
+  z-index:200;
+}
+.chatBubble{
+  width:78px;height:78px;border-radius:50%;
+  background:linear-gradient(135deg, rgba(110,168,255,.35), rgba(94,230,179,.28));
+  border:2px solid rgba(110,168,255,.55);
+  box-shadow:0 14px 48px rgba(0,0,0,.55);
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .35s ease;
+  position:relative;
+}
+.chatBubble:hover{
+  transform:scale(1.12) translateY(-4px);
+}
+.chatBubble svg{width:40px;height:40px;fill:#eef3ff}
+.chatPulse{
+  position:absolute;inset:-2px;border-radius:50%;
+  border:2px solid rgba(110,168,255,.55);
+  animation:pulse 2.4s infinite;
+}
+@keyframes pulse{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.45);opacity:0}}
+
+.chatWindow{
+  position:fixed;
+  bottom:125px;right:28px;
+  width:480px;height:620px;
+  max-width:calc(100vw - 56px);
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:26px;
+  box-shadow:var(--shadow);
+  opacity:0;
+  transform:translateY(22px) scale(.94);
+  pointer-events:none;
+  transition:all .35s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;
+}
+.chatWindow.active{
+  opacity:1;transform:translateY(0) scale(1);pointer-events:all;
+}
+.chatHeader{
+  padding:22px 24px;
+  background:linear-gradient(135deg, rgba(110,168,255,.20), rgba(94,230,179,.10));
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:14px;
+}
+.chatHeaderText h3{margin:0;font-size:16px;font-weight:900}
+.chatHeaderText p{margin:4px 0 0;font-size:12px;color:var(--muted)}
+.chatClose{
+  margin-left:auto;
+  width:34px;height:34px;
+  border:none;border-radius:10px;
+  background:rgba(255,255,255,.06);
+  color:var(--muted);
+  font-size:22px;cursor:pointer;
+}
+.chatBody{padding:26px;overflow-y:auto;flex:1}
+.chatBubbleText{
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:18px 20px;
+  font-size:14px;
+  line-height:1.65;
+}
+.chatOptions{
+  margin-top:16px;
+  display:grid;gap:12px;
+}
+.chatOption{
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:16px 18px;
+  font-size:13px;
+  text-decoration:none;
+  color:var(--ink);
+  transition:all .25s ease;
+}
+.chatOption:hover{
+  background:rgba(110,168,255,.14);
+  border-color:rgba(110,168,255,.45);
+  transform:translateX(6px);
+}
+</style>
+</head>
+
+<body>
+<div class="gridFX"></div>
+
+<header class="topbar">
+  <div class="inner">
+    <div class="brand">
+      <strong>AUCTORIS</strong>
+      <span>Radar Sancionador — Relatório Institucional (Amostra)</span>
+    </div>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="radar.html">Radar</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section class="hero">
+  <div class="kicker">Relatório institucional · versão demonstrativa</div>
+  <h1>Radar Sancionador<br><em>leitura estratégica de exposição institucional</em></h1>
+  <p>
+    Relatório demonstrativo que consolida padrões abstratos observáveis
+    em decisões e atos públicos, com foco na forma de estruturação da decisão institucional.
+    Não avalia organizações, não atribui intenção e não emite parecer jurídico.
+  </p>
+</section>
+
+<section class="section">
+  <h2>Leitura institucional consolidada</h2>
+  <div class="textBox">
+    <p>
+      Registra-se, em bases públicas, recorrência de enquadramentos decisórios
+      que deslocam a leitura de um eixo exclusivamente técnico
+      para uma dimensão institucional mais ampla.
+      Observam-se referências consistentes à governança decisória,
+      coerência procedimental e preservação mínima de evidências
+      em eventos sensíveis.
+      A ausência desses sinais aparece associada,
+      nos próprios registros decisórios,
+      à intensificação de exposição sancionatória,
+      independentemente de alteração normativa formal.
+    </p>
+  </div>
+</section>
+
+<section class="notice">
+  <b>Relatório de amostra</b>
+  <span>
+    Este documento representa uma amostra estrutural do Radar Sancionador.
+    A versão integral é parametrizada por organização, setor regulado
+    e perfil decisório, com acesso restrito.
+  </span>
+</section>
+
+<footer class="footer">
+  <div class="author">
+    <b>Guilherme Rafael de Souza Araujo</b>
+    <span>Advogado · Professor · Pesquisador independente · Escritor</span>
+    <span>
+      <a href="mailto:guilhermersaraujo@proton.me">
+        guilhermersaraujo@proton.me
+      </a>
+    </span>
+  </div>
+  <div class="legal">
+    Conteúdo informativo e educacional, baseado exclusivamente em dados públicos.
+    Não constitui parecer jurídico, avaliação de conformidade ou recomendação operacional.
+  </div>
+</footer>
+
+</main>
+
+<!-- CHATBOT -->
+<div class="chatBot">
+  <div class="chatBubble" id="chatToggle">
+    <div class="chatPulse"></div>
+    <svg viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10"/>
+      <circle cx="9" cy="10" r="1.5"/>
+      <circle cx="15" cy="10" r="1.5"/>
+    </svg>
+  </div>
+
+  <div class="chatWindow" id="chatWindow">
+    <div class="chatHeader">
+      <div class="chatHeaderText">
+        <h3>Assistente AUCTORIS</h3>
+        <p>Relatório institucional · módulo demonstrativo</p>
+      </div>
+      <button class="chatClose" id="chatClose">×</button>
+    </div>
+    <div class="chatBody" id="chatBody"></div>
+  </div>
+</div>
+
+<script>
+const chatToggle=document.getElementById("chatToggle");
+const chatWindow=document.getElementById("chatWindow");
+const chatClose=document.getElementById("chatClose");
+const chatBody=document.getElementById("chatBody");
+let started=false;
+
+function addBlock(text,links){
+  const div=document.createElement("div");
+  div.innerHTML=`
+    <div class="chatBubbleText">${text}</div>
+    <div class="chatOptions">
+      ${links.map(l=>`<a class="chatOption" href="${l.href}">${l.label}</a>`).join("")}
+    </div>`;
+  chatBody.appendChild(div);
+  chatBody.scrollTop=chatBody.scrollHeight;
+}
+
+chatToggle.onclick=()=>{
+  chatWindow.classList.add("active");
+  if(!started){
+    addBlock(
+      "Radar Sancionador — relatório institucional em modo amostra.<br><br>Este ambiente demonstra a lógica estrutural de leitura sancionadora, sem refletir configurações específicas por organização.",
+      [
+        {label:"📊 Termômetro Regulatório",href:"termometro.html"},
+        {label:"🏛️ Página Institucional",href:"index.html"}
+      ]
+    );
+    addBlock(
+      "O Radar completo é parametrizado por organização, setor regulado e perfil decisório.<br><br>A versão integral é disponibilizada exclusivamente em ambiente controlado.",
+      [
+        {label:"📄 Radar Público",href:"radar.html"},
+        {label:"✉️ Contato Institucional",href:"mailto:guilhermersaraujo@proton.me"}
+      ]
+    );
+    started=true;
+  }
+};
+chatClose.onclick=()=>chatWindow.classList.remove("active");
+document.addEventListener("click",e=>{
+  if(!chatWindow.contains(e.target)&&!chatToggle.contains(e.target)){
+    chatWindow.classList.remove("active");
+  }
+});
+</script>
+
+</body>
+</html>

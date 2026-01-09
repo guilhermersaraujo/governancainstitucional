@@ -1,0 +1,1326 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<title>AUCTORIS — Termômetro Regulatório 2026</title>
+<style>
+:root{
+  --bg0:#070A12; --bg1:#0A1020; --bg2:#0B1430;
+  --card:#0C1733; --card2:#0B1A3B;
+  --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.12);
+  --fg:#EAF0FF; --muted:rgba(234,240,255,.68); --muted2:rgba(234,240,255,.52);
+  --accent:#6EA8FF; --accent2:#9CC4FF;
+  --ok:#46D39A; --warn:#F2C14E; --risk:#FF6B6B;
+  --shadow: 0 18px 60px rgba(0,0,0,.45);
+  --radius: 18px; --radius2: 14px;
+  --glass: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+  --glass2: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  color:var(--fg);
+  background:
+    radial-gradient(900px 500px at 18% 8%, rgba(110,168,255,.18), transparent 60%),
+    radial-gradient(800px 520px at 88% 16%, rgba(70,211,154,.12), transparent 55%),
+    radial-gradient(900px 700px at 55% 92%, rgba(242,193,78,.10), transparent 58%),
+    linear-gradient(180deg, var(--bg0), var(--bg1) 40%, var(--bg0) 100%);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+  line-height:1.5;
+}
+a{color:inherit; text-decoration:none}
+
+/* subtle grid */
+.bg-grid::before{
+  content:"";
+  position:fixed; inset:0;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size: 56px 56px;
+  opacity:.07;
+  pointer-events:none;
+}
+.bg-grid::after{
+  content:"";
+  position:fixed; inset:-2px;
+  background:
+    radial-gradient(900px 500px at 30% 20%, rgba(110,168,255,.12), transparent 60%),
+    radial-gradient(900px 700px at 70% 80%, rgba(156,196,255,.09), transparent 60%);
+  mix-blend-mode:screen;
+  opacity:.55;
+  pointer-events:none;
+}
+
+.container{max-width:1180px; margin:0 auto; padding:18px 18px 64px}
+
+/* topbar */
+.topbar{
+  position:sticky; top:0; z-index:50;
+  backdrop-filter: blur(10px);
+  background: rgba(7,10,18,.58);
+  border-bottom:1px solid var(--line);
+}
+.topbar-inner{max-width:1180px; margin:0 auto; padding:12px 18px; display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+.brand{display:flex; flex-direction:column; gap:2px; min-width: 180px}
+.brand .kicker{font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted2)}
+.brand .name{font-family: ui-serif, Georgia, "Times New Roman", Times, serif; font-size:18px; letter-spacing:.02em}
+.nav{margin-left:auto; display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background: var(--glass2);
+  box-shadow: 0 10px 30px rgba(0,0,0,.20);
+  color:var(--fg);
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:.02em;
+  transition: transform .15s ease, border-color .15s ease, background .15s ease, opacity .15s ease;
+  cursor:pointer;
+}
+.btn:hover{transform: translateY(-1px); border-color:var(--line2); background: rgba(255,255,255,.08)}
+.btn:active{transform: translateY(0px) scale(.99)}
+.btn.primary{border-color: rgba(110,168,255,.35); background: linear-gradient(180deg, rgba(110,168,255,.18), rgba(255,255,255,.04))}
+.btn.ghost{background: transparent}
+.btn.ok{border-color: rgba(70,211,154,.35); background: linear-gradient(180deg, rgba(70,211,154,.15), rgba(255,255,255,.04))}
+
+.pill{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color:var(--muted);
+  font-size:12px;
+}
+
+.dot{width:8px; height:8px; border-radius:50%}
+.dot.ok{background:var(--ok)}
+.dot.warn{background:var(--warn)}
+.dot.risk{background:var(--risk)}
+
+.section{margin-top:28px}
+
+.hero{
+  margin-top:20px;
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:16px;
+}
+
+.card{
+  border:1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--glass);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+}
+.card-inner{padding:20px}
+.card-inner.expand{padding:24px}
+
+.h1{font-family: ui-serif, Georgia, "Times New Roman", Times, serif; font-size:38px; margin:0; letter-spacing:.01em; line-height:1.2}
+@media (max-width: 520px){ .h1{font-size:28px} }
+.sub{margin:12px 0 0; color:var(--muted); font-size:15px; line-height:1.7; max-width: 68ch}
+
+.row{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+
+.tabs{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px}
+.tab{
+  padding:12px 16px;
+  border-radius: 999px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color:var(--muted);
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  transition: transform .15s ease, border-color .15s ease, background .15s ease, color .15s ease;
+}
+.tab:hover{transform: translateY(-1px); border-color:var(--line2)}
+.tab.active{color:var(--fg); border-color: rgba(110,168,255,.35); background: linear-gradient(180deg, rgba(110,168,255,.18), rgba(255,255,255,.04))}
+
+.quicknav{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px}
+.quicknav .btn{padding:10px 14px}
+
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+@media (max-width: 920px){ .grid2{grid-template-columns:1fr} }
+
+.grid3{display:grid; grid-template-columns:repeat(3, 1fr); gap:16px}
+@media (max-width: 980px){ .grid3{grid-template-columns:1fr} }
+
+.kicker{font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted2); margin-bottom:10px}
+.h2{margin:0 0 12px; font-size:20px; letter-spacing:.02em; font-weight:700}
+.h3{margin:0 0 10px; font-size:16px; letter-spacing:.02em; font-weight:700}
+.muted{color:var(--muted)}
+.small{font-size:13px; color:var(--muted); line-height:1.6}
+.sep{height:1px; background:var(--line); margin:16px 0}
+
+/* thermometers */
+.thermo{display:flex; flex-direction:column; gap:14px}
+.thermo-item{display:flex; gap:12px; align-items:center}
+.thermo-name{min-width:120px; font-size:13px; color:var(--muted); letter-spacing:.05em; text-transform:uppercase; font-weight:600}
+.barwrap{flex:1}
+.bar{height:12px; border-radius:999px; background: rgba(255,255,255,.07); border:1px solid var(--line); overflow:hidden}
+.fill{height:100%; width:0%; border-radius:999px; background: linear-gradient(90deg, rgba(110,168,255,.90), rgba(156,196,255,.35)); box-shadow: 0 0 0 1px rgba(110,168,255,.25) inset; transition:width .6s cubic-bezier(.4,0,.2,1)}
+.value{width:48px; text-align:right; font-variant-numeric: tabular-nums; color:var(--fg); font-weight:600; font-size:14px}
+
+/* canvas cards */
+.canvas-wrap{position:relative; margin-top:16px}
+.canvas{width:100%; height:200px; display:block}
+.canvas.small{height:140px}
+.canvas.large{height:260px}
+
+/* list */
+.ul{margin:12px 0 0; padding:0; list-style:none; display:grid; gap:10px}
+.li{display:flex; gap:12px; align-items:flex-start; padding:10px 12px; border-radius:10px; background:rgba(255,255,255,.03); border:1px solid var(--line)}
+.bullet{width:8px; height:8px; border-radius:50%; margin-top:7px; background:rgba(110,168,255,.7); flex-shrink:0}
+.li-content{flex:1; font-size:14px; line-height:1.65; color:var(--muted)}
+
+.theme{border:1px solid var(--line); border-radius: var(--radius2); background: rgba(255,255,255,.04); padding:16px; transition:all .2s ease}
+.theme:hover{background: rgba(255,255,255,.06); border-color:var(--line2)}
+.theme .t{display:flex; align-items:center; gap:12px; margin-bottom:10px}
+.theme .ico{width:32px; height:32px; border-radius:10px; border:1px solid var(--line); background: rgba(255,255,255,.04); display:flex; align-items:center; justify-content:center; font-size:18px}
+.theme .title{font-size:15px; font-weight:700; color:var(--fg)}
+.theme .desc{font-size:14px; line-height:1.6; color:var(--muted)}
+
+/* recorte chips */
+.chips{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+.chip{
+  padding:12px 16px;
+  border-radius: 999px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color:var(--muted);
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  transition: transform .15s ease, border-color .15s ease, background .15s ease, color .15s ease;
+}
+.chip:hover{transform: translateY(-1px); border-color:var(--line2); background: rgba(255,255,255,.06)}
+.chip.active{color:var(--fg); border-color: rgba(70,211,154,.35); background: linear-gradient(180deg, rgba(70,211,154,.14), rgba(255,255,255,.04))}
+
+/* guide box */
+.guideBox{
+  margin-top:20px;
+  padding:18px 20px;
+  border-radius:14px;
+  background:linear-gradient(135deg, rgba(110,168,255,.12), rgba(70,211,154,.08));
+  border:1px solid rgba(110,168,255,.25);
+}
+.guideBox .icon{font-size:24px; margin-bottom:8px}
+.guideBox .title{font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent2); margin-bottom:8px}
+.guideBox .text{font-size:13px; line-height:1.65; color:var(--muted); margin-bottom:12px}
+.guideBox .actions{display:flex; gap:8px; flex-wrap:wrap}
+
+/* info cards */
+.infoGrid{display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px; margin-top:16px}
+.infoCard{
+  padding:16px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.04);
+  transition:all .2s ease;
+}
+.infoCard:hover{background:rgba(255,255,255,.06); border-color:var(--line2)}
+.infoCard .num{font-size:28px; font-weight:800; color:var(--accent2); margin-bottom:6px}
+.infoCard .label{font-size:12px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted2); margin-bottom:6px}
+.infoCard .desc{font-size:13px; line-height:1.6; color:var(--muted)}
+
+/* modal */
+.modal-backdrop{
+  position:fixed; inset:0; z-index:80;
+  display:none;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(10px);
+}
+.modal{
+  position:fixed; inset:0; z-index:90;
+  display:none;
+  place-items:center;
+  padding:20px;
+  overflow-y:auto;
+}
+.modal .panel{
+  width:min(980px, 96vw);
+  max-height:90vh;
+  overflow-y:auto;
+  border-radius: var(--radius);
+  border:1px solid var(--line2);
+  background: linear-gradient(180deg, rgba(12,23,51,.96), rgba(7,10,18,.96));
+  box-shadow: 0 28px 90px rgba(0,0,0,.65);
+}
+.modal .panel header{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:18px 20px; border-bottom:1px solid var(--line); position:sticky; top:0; background:rgba(12,23,51,.98); backdrop-filter:blur(10px); z-index:1}
+.modal .panel header .title{display:flex; flex-direction:column; gap:4px}
+.modal .panel header .title .h{font-family: ui-serif, Georgia, "Times New Roman", Times, serif; font-size:20px; font-weight:700}
+.modal .panel header .title .s{font-size:13px; color:var(--muted2)}
+.modal .panel .content{padding:20px}
+.x{cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:8px; background:rgba(255,255,255,.05); border:1px solid var(--line); font-size:20px; transition:all .2s ease}
+.x:hover{background:rgba(255,107,107,.2); border-color:rgba(255,107,107,.35); color:var(--risk)}
+
+/* CHAT BOT */
+.chatBot{position:fixed; bottom:28px; right:28px; z-index:100}
+.chatBubble{
+  width:68px; height:68px; border-radius:50%;
+  background:linear-gradient(135deg, rgba(110,168,255,.28), rgba(70,211,154,.22));
+  border:2px solid rgba(110,168,255,.45);
+  box-shadow:0 8px 32px rgba(0,0,0,.35);
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all .3s ease;
+  position:relative;
+}
+.chatBubble:hover{transform:scale(1.08) translateY(-3px); box-shadow:0 12px 40px rgba(110,168,255,.45)}
+.chatBubble svg{width:36px; height:36px; fill:var(--fg); filter:drop-shadow(0 2px 4px rgba(0,0,0,.2))}
+.chatPulse{
+  position:absolute; inset:0; border-radius:50%;
+  border:2px solid rgba(110,168,255,.6);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%{transform:scale(1);opacity:1}
+  100%{transform:scale(1.4);opacity:0}
+}
+
+.chatWindow{
+  position:fixed; bottom:110px; right:28px;
+  width:440px; max-width:calc(100vw - 56px);
+  max-height:calc(100vh - 150px);
+  background:linear-gradient(180deg, rgba(12,23,51,.98), rgba(7,10,18,.98));
+  border:1px solid var(--line2);
+  border-radius:20px;
+  box-shadow:var(--shadow);
+  opacity:0; transform:translateY(20px) scale(.95);
+  pointer-events:none;
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+  overflow:hidden;
+  display:flex; flex-direction:column;
+}
+.chatWindow.active{opacity:1; transform:translateY(0) scale(1); pointer-events:all}
+
+.chatHeader{
+  padding:18px 20px;
+  background:linear-gradient(135deg, rgba(110,168,255,.15), rgba(70,211,154,.08));
+  border-bottom:1px solid var(--line);
+  display:flex; align-items:center; gap:14px;
+}
+.chatAvatar{
+  width:44px; height:44px; border-radius:50%;
+  background:linear-gradient(135deg, rgba(110,168,255,.25), rgba(70,211,154,.18));
+  border:2px solid rgba(110,168,255,.35);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.chatAvatar svg{width:24px; height:24px; fill:var(--fg)}
+.chatHeaderText h3{margin:0; font-size:15px; font-weight:800; letter-spacing:.04em}
+.chatHeaderText p{margin:4px 0 0; font-size:12px; color:var(--muted2)}
+.chatClose{
+  margin-left:auto; width:32px; height:32px;
+  border:none; background:rgba(255,255,255,.05);
+  border-radius:8px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all .2s ease;
+  color:var(--muted); font-size:20px; line-height:1;
+}
+.chatClose:hover{background:rgba(255,107,107,.2); color:var(--risk)}
+
+.chatBody{padding:20px; overflow-y:auto; flex:1}
+.chatMessage{margin-bottom:18px; animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)}}
+.chatMessage.bot{display:flex; gap:12px}
+.chatMessageAvatar{
+  width:30px; height:30px; border-radius:50%;
+  background:linear-gradient(135deg, rgba(110,168,255,.2), rgba(70,211,154,.15));
+  border:1px solid rgba(110,168,255,.3);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.chatMessageAvatar svg{width:16px; height:16px; fill:var(--fg)}
+.chatMessageContent{flex:1}
+.chatBubbleText{
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px 14px;
+  font-size:13px;
+  line-height:1.6;
+  color:var(--fg);
+}
+.chatOptions{display:flex; flex-direction:column; gap:10px; margin-top:12px}
+.chatOption{
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px 14px;
+  font-size:13px;
+  line-height:1.5;
+  cursor:pointer;
+  transition:all .2s ease;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.chatOption:hover{
+  background:rgba(110,168,255,.12);
+  border-color:rgba(110,168,255,.35);
+  transform:translateX(4px);
+}
+.chatOption .emoji{font-size:18px; flex-shrink:0}
+.chatOption .text{flex:1; color:var(--fg)}
+
+footer{margin-top:34px; border-top:1px solid var(--line); padding-top:16px; color:var(--muted2)}
+footer .foot{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between}
+
+/* fade */
+.fade{opacity:1; transform: translateY(0); transition: opacity .18s ease, transform .18s ease}
+.fade.out{opacity:0; transform: translateY(6px)}
+
+@media(max-width:768px){
+  .chatBot{bottom:20px; right:20px}
+  .chatBubble{width:60px; height:60px}
+  .chatBubble svg{width:32px; height:32px}
+  .chatWindow{bottom:95px; right:20px; width:calc(100vw - 40px)}
+}
+</style>
+</head>
+<body class="bg-grid">
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="kicker">AUCTORIS · Termômetro Regulatório</div>
+      <div class="name">Leitura pública — 2026</div>
+    </div>
+
+    <div class="nav">
+      <button class="btn ghost" data-scroll="#metodologia">📖 Parâmetros</button>
+      <button class="btn ghost" data-scroll="#cenario">📊 Cenário</button>
+      <button class="btn ghost" data-scroll="#recortes">🔍 Setores</button>
+      <button class="btn ghost" data-scroll="#leitura">🧭 Síntese</button>
+
+      <a class="btn ghost" href="./radar.html">🛰️ Radar</a>
+      <a class="btn ghost" href="./radar-relatorio-2026-01.html">📄 Relatório</a>
+      <a class="btn ghost" href="./palestra.html">🎙️ Palestra</a>
+      <a class="btn ghost" href="./incident-dashboard.html" title="Acesso restrito">🛡️ Incident</a>
+
+      <a class="btn primary" href="./index.html">← Home</a>
+      <button class="btn ghost" onclick="history.back()">↩︎ Voltar</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- HERO -->
+  <section class="hero fade">
+    <div class="card">
+      <div class="card-inner expand">
+        <h1 class="h1">Termômetro Regulatório<br>Janeiro 2026</h1>
+        <p class="sub">
+          Leitura pública contínua do ambiente regulatório brasileiro, com ênfase em pressão institucional, deslocamentos de enforcement e fricções setoriais sob o regime jurídico aplicável. Material orientado a governança, reputação e risco em organizações expostas.
+        </p>
+        <p class="sub">
+          Escopo público e editorial. A camada decisória permanece reservada a contextos institucionais próprios, com validação interna e governança de evidências.
+        </p>
+
+        <div class="row" style="margin-top:20px">
+          <div class="pill">
+            <span class="dot ok"></span>
+            <span>Status: <strong>Moderado</strong></span>
+          </div>
+          <div class="pill">
+            <span>📅</span>
+            <span>Jan 2026</span>
+          </div>
+          <div class="pill">
+            <span>🔄</span>
+            <span>Atualizado</span>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <button class="tab active" data-month="2026-01">Janeiro 2026</button>
+          <button class="tab" data-month="2025-12">Dezembro 2025</button>
+          <button class="tab" data-month="2025-11">Novembro 2025</button>
+        </div>
+
+        <!-- GUIDE BOX -->
+        <div class="guideBox">
+          <div class="icon">🧭</div>
+          <div class="title">Orientação de Leitura</div>
+          <div class="text">
+            Primeiro, o patamar agregado (Escrutínio · Exposição · Evidência · Reação). Em seguida, o vetor de tendência (12 meses). Por fim, o recorte setorial — onde o risco institucional costuma se materializar com assimetria e precedentes.
+          </div>
+          <div class="actions">
+            <button class="btn primary" data-scroll="#cenario">Ir ao Cenário</button>
+            <button class="btn ghost" data-scroll="#recortes">Ver Setores</button>
+            <button class="btn ghost" onclick="openGuideChat()">🤖 Assistente</button>
+          </div>
+        </div>
+
+        <div class="quicknav">
+          <a class="btn ghost" href="./radar.html">Radar Sancionador</a>
+          <a class="btn ghost" href="./radar-relatorio-2026-01.html">Relatório (jan/2026)</a>
+          <a class="btn ghost" href="./palestra.html">Palestra Executiva</a>
+          <a class="btn ghost" href="./incident-dashboard.html" title="Acesso restrito">Incident Dashboard</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- METODOLOGIA -->
+  <section id="metodologia" class="section">
+    <div class="card">
+      <div class="card-inner expand">
+        <div class="kicker">Parâmetros</div>
+        <h2 class="h2">Arquitetura de Leitura</h2>
+        <p class="small">
+          A construção do Termômetro se apoia em sinais públicos e rastros institucionais com relevância regulatória, priorizando coerência, continuidade e custo sistêmico. Quatro dimensões organizam o panorama e funcionam como eixo de comparabilidade entre meses e setores.
+        </p>
+
+        <div class="grid2" style="margin-top:20px">
+          <div class="theme">
+            <div class="t">
+              <div class="ico">🔎</div>
+              <div class="title">Escrutínio Regulatório</div>
+            </div>
+            <div class="desc">
+              Intensificação de atenção institucional sobre condutas, setores e infraestruturas sensíveis. Sinal típico: expansão de supervisão, abertura de frentes e aumento de fricção interpretativa.
+            </div>
+          </div>
+
+          <div class="theme">
+            <div class="t">
+              <div class="ico">⚠️</div>
+              <div class="title">Exposição Institucional</div>
+            </div>
+            <div class="desc">
+              Elevação de visibilidade pública e pressão reputacional associada a temas regulatórios. Sinal típico: externalização do tema, amplificação por controle e agenda pública.
+            </div>
+          </div>
+
+          <div class="theme">
+            <div class="t">
+              <div class="ico">📋</div>
+              <div class="title">Evidência Decisória</div>
+            </div>
+            <div class="desc">
+              Densidade de movimentos decisórios e endurecimento de postura em linha com precedentes, padrões e expectativas de conformidade institucional. Sinal típico: aumento de ações, mudanças de dosimetria e estabilidade punitiva.
+            </div>
+          </div>
+
+          <div class="theme">
+            <div class="t">
+              <div class="ico">⚡</div>
+              <div class="title">Reação Setorial</div>
+            </div>
+            <div class="desc">
+              Respostas observáveis das organizações diante de pressão regulatória. Sinal típico: reestruturação de governança, reequilíbrio de controles e ajuste de postura perante autoridades e stakeholders.
+            </div>
+          </div>
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="infoGrid">
+          <div class="infoCard">
+            <div class="num">12</div>
+            <div class="label">Setores Monitorados</div>
+            <div class="desc">Cobertura contínua em frentes com alta fricção regulatória e relevância sistêmica</div>
+          </div>
+          <div class="infoCard">
+            <div class="num">250+</div>
+            <div class="label">Fontes Públicas</div>
+            <div class="desc">Rastros decisórios, agendas, atos e registros institucionais com lastro verificável</div>
+          </div>
+          <div class="infoCard">
+            <div class="num">30</div>
+            <div class="label">Janela Mensal</div>
+            <div class="desc">Ciclos mensais com continuidade histórica para detectar deslocamentos de postura</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CENÁRIO GERAL -->
+  <section id="cenario" class="section fade">
+    <div class="card">
+      <div class="card-inner expand">
+        <div class="kicker">Cenário Regulatório</div>
+        <h2 class="h2">Termômetros Institucionais — Janeiro 2026</h2>
+
+        <div class="thermo">
+          <div class="thermo-item">
+            <div class="thermo-name">Escrutínio</div>
+            <div class="barwrap">
+              <div class="bar"><div class="fill" id="fill1"></div></div>
+            </div>
+            <div class="value" id="val1">0</div>
+          </div>
+          <div class="thermo-item">
+            <div class="thermo-name">Exposição</div>
+            <div class="barwrap">
+              <div class="bar"><div class="fill" id="fill2"></div></div>
+            </div>
+            <div class="value" id="val2">0</div>
+          </div>
+          <div class="thermo-item">
+            <div class="thermo-name">Evidência</div>
+            <div class="barwrap">
+              <div class="bar"><div class="fill" id="fill3"></div></div>
+            </div>
+            <div class="value" id="val3">0</div>
+          </div>
+          <div class="thermo-item">
+            <div class="thermo-name">Reação</div>
+            <div class="barwrap">
+              <div class="bar"><div class="fill" id="fill4"></div></div>
+            </div>
+            <div class="value" id="val4">0</div>
+          </div>
+        </div>
+
+        <div class="canvas-wrap">
+          <canvas id="radarCanvas" class="canvas"></canvas>
+        </div>
+
+        <div class="sep"></div>
+
+        <h3 class="h3">Sinais de Pressão Institucional</h3>
+        <ul class="ul" id="signalsList">
+          <li class="li">
+            <span class="bullet"></span>
+            <div class="li-content">
+              <strong>BACEN:</strong> Continuidade de exigências sobre governança e integridade de dados em operações financeiras. A fricção tende a concentrar-se em instituições com maturidade desigual e cronogramas internos frágeis.
+            </div>
+          </li>
+          <li class="li">
+            <span class="bullet"></span>
+            <div class="li-content">
+              <strong>SUSEP:</strong> Aumento de pressão sobre comunicação e tratamento de eventos cibernéticos no setor securitário. O ciclo atual indica consolidação de padrões e menor tolerância a assimetria de controles.
+            </div>
+          </li>
+          <li class="li">
+            <span class="bullet"></span>
+            <div class="li-content">
+              <strong>ANPD:</strong> Intensificação de agenda sobre dados sensíveis e biométricos. A tendência eleva risco institucional em cadeias que dependem de autenticação, identificação e tratamento de dados de alta criticidade.
+            </div>
+          </li>
+          <li class="li">
+            <span class="bullet"></span>
+            <div class="li-content">
+              <strong>CVM:</strong> Escalada de expectativas de transparência e consistência de disclosures sob pressão reputacional e controle. A governança passa a ser tratada como risco material, não como retórica.
+            </div>
+          </li>
+          <li class="li">
+            <span class="bullet"></span>
+            <div class="li-content">
+              <strong>Órgãos de controle:</strong> Endurecimento de parâmetros mínimos de cibersegurança e gestão de riscos em serviços críticos, com efeito indireto em fornecedores privados e contratos de alta relevância.
+            </div>
+          </li>
+        </ul>
+
+        <div class="sep"></div>
+
+        <h3 class="h3">Tendência de Cenário (12 meses)</h3>
+        <canvas id="scenarioCanvas" class="canvas large"></canvas>
+        <p class="small" style="margin-top:12px">
+          <strong>Registro:</strong> Intensificação moderada ao longo de 2025, com aceleração no 4º trimestre e estabilização em patamar elevado no início de 2026. O vetor sugere continuidade de postura, com deslocamento setorial assimétrico.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECORTES SETORIAIS -->
+  <section id="recortes" class="section fade">
+    <div class="card">
+      <div class="card-inner expand">
+        <div class="kicker">Recortes Setoriais</div>
+        <h2 class="h2">Leitura por Setor</h2>
+        <p class="small">
+          Setores com maior criticidade tendem a operar sob pressão regulatória não linear. O recorte evidencia onde a fricção institucional se concentra e onde precedentes costumam se formar.
+        </p>
+
+        <div class="chips">
+          <div class="chip active" data-sector="financeiro">🏦 Financeiro</div>
+          <div class="chip" data-sector="seguros">🛡️ Seguros</div>
+          <div class="chip" data-sector="saude">⚕️ Saúde</div>
+          <div class="chip" data-sector="energia">⚡ Energia</div>
+          <div class="chip" data-sector="telecom">📡 Telecom</div>
+          <div class="chip" data-sector="infraestrutura">🏗️ Infraestrutura</div>
+        </div>
+
+        <!-- GUIDE BOX -->
+        <div class="guideBox" style="margin-top:24px">
+          <div class="icon">🎯</div>
+          <div class="title">Recorte Setorial</div>
+          <div class="text">
+            A mesma norma não produz o mesmo efeito em setores distintos. O recorte expõe assimetrias de maturidade, criticidade e sensibilidade reputacional — onde o custo de erro tende a ser multiplicado.
+          </div>
+          <div class="actions">
+            <button class="btn ok" data-scroll="#leitura">Ir à Síntese</button>
+            <a class="btn ghost" href="./index.html#rodape">Contato institucional</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEITURA EXECUTIVA -->
+  <section id="leitura" class="section fade">
+    <div class="card">
+      <div class="card-inner expand">
+        <div class="kicker">Síntese Executiva</div>
+        <h2 class="h2">Condição do Ambiente</h2>
+
+        <div class="grid2" style="margin-top:20px">
+          <div>
+            <h3 class="h3">Janeiro 2026 — Patamar</h3>
+            <p class="small">
+              Início de 2026 em pressão moderada, com continuidade de frentes abertas no ciclo anterior. Três vetores se destacam por impacto institucional e efeito de segunda ordem:
+            </p>
+            <ul class="ul">
+              <li class="li">
+                <span class="bullet"></span>
+                <div class="li-content">
+                  <strong>Governança de dados:</strong> Convergência de expectativas regulatórias sobre proteção, integridade e uso legítimo de dados em cadeias críticas. A assimetria de maturidade tende a produzir fricção e exposição.
+                </div>
+              </li>
+              <li class="li">
+                <span class="bullet"></span>
+                <div class="li-content">
+                  <strong>Cibersegurança:</strong> Consolidação de postura de cobrança sobre capacidade de resposta, comunicação e trilha de decisão. O padrão se desloca de “evento” para “governança do evento”.
+                </div>
+              </li>
+              <li class="li">
+                <span class="bullet"></span>
+                <div class="li-content">
+                  <strong>Transparência e reputação:</strong> Intensificação de exigências de disclosure e consistência narrativa. Falhas de governança passam a ser tratadas como risco material e gerador de contágio.
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="h3">Pontos de Atenção</h3>
+            <p class="small">
+              Onde o risco regulatório é relevante, o custo institucional tende a emergir em prazos, evidências e narrativa. Três focos persistem:
+            </p>
+            <ul class="ul">
+              <li class="li">
+                <span class="bullet"></span>
+                <div class="li-content">
+                  <strong>Prazos e transição:</strong> Cronogramas internos frágeis e transições mal governadas elevam risco de fricção. O problema raramente é a ausência de norma — é a ausência de lastro.
+                </div>
+              </li>
+              <li class="li">
+                <span class="bullet"></span>
+                <div class="li-content">
+                  <strong>Ambiente consultivo:</strong> Consultas públicas e agendas setoriais funcionam como ante-sala de mudança. A inércia costuma custar mais do que a participação qualificada.
+                </div>
+              </li>
+              <li class="li">
+                <span class="bullet"></span>
+                <div class="li-content">
+                  <strong>Capacidade de resposta:</strong> Resposta operacional sem governança decisória tende a produzir inconsistência e risco reputacional. O sistema observa sequência, não apenas resultado.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sep"></div>
+
+        <h3 class="h3">Simulações de Cenário</h3>
+        <p class="small">
+          Dois vetores plausíveis para os próximos seis meses: (i) deterioração por resposta institucional frágil, com endurecimento de postura; (ii) estabilização por governança fortalecida, com focalização em setores menos maduros.
+        </p>
+
+        <div class="grid2" style="margin-top:20px">
+          <div>
+            <h3 class="h3" style="color:var(--risk)">Cenário: Resposta Frágil</h3>
+            <canvas id="fragileCanvas" class="canvas"></canvas>
+            <p class="small" style="margin-top:10px">
+              Escalada por recorrência, inconsistência e ausência de evidência decisória. A tendência desloca-se para maior severidade e menor tolerância a improviso.
+            </p>
+          </div>
+          <div>
+            <h3 class="h3" style="color:var(--ok)">Cenário: Governança Fortalecida</h3>
+            <canvas id="governCanvas" class="canvas"></canvas>
+            <p class="small" style="margin-top:10px">
+              Estabilização em patamar alto, com pressão redistribuída para cadeias mais expostas e menos maduras. O sistema premia previsibilidade e coerência.
+            </p>
+          </div>
+        </div>
+
+        <!-- FINAL GUIDE -->
+        <div class="guideBox" style="margin-top:28px">
+          <div class="icon">↗</div>
+          <div class="title">Rotas AUCTORIS</div>
+          <div class="text">
+            Camada pública: panorama e tendência. Camadas reservadas: correlação, precedentes, padrões e suporte à decisão institucional conforme governança interna e escopo pactuado.
+          </div>
+          <div class="actions">
+            <a class="btn primary" href="./index.html">← Home</a>
+            <a class="btn ghost" href="./radar.html">Abrir Radar</a>
+            <a class="btn ghost" href="./palestra.html">Palestra</a>
+            <a class="btn ok" href="./index.html#rodape">Contato</a>
+            <button class="btn ghost" onclick="openGuideChat()">🤖 Assistente</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot">
+      <div class="small">
+        © 2026 AUCTORIS — Sistema Institucional de Leitura Decisória<br>
+        Guilherme Rafael de Souza Araujo · OAB/PE 48.686
+      </div>
+      <div class="row">
+        <a href="./index.html" class="btn ghost">Home</a>
+        <a href="./radar.html" class="btn ghost">Radar</a>
+        <a href="./palestra.html" class="btn ghost">Palestra</a>
+        <a href="./incident-dashboard.html" class="btn ghost" title="Acesso restrito">Incident</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- MODAL SETOR -->
+<div class="modal-backdrop" id="backdrop"></div>
+<div class="modal" id="modal">
+  <div class="panel">
+    <header>
+      <div class="title">
+        <div class="h" id="modalTitle">Setor Financeiro</div>
+        <div class="s" id="modalSub">Janeiro 2026 · Recorte editorial</div>
+      </div>
+      <button class="x" id="btnClose">×</button>
+    </header>
+    <div class="content">
+      <div class="kicker">Termômetro Setorial</div>
+      <div class="thermo" id="sectorThermo"></div>
+
+      <div class="sep"></div>
+
+      <div class="kicker">Sinais Observados</div>
+      <ul class="ul" id="sectorSignals"></ul>
+
+      <div class="sep"></div>
+
+      <div class="kicker">Leitura Decisória</div>
+      <p class="small" id="sectorRead"></p>
+
+      <canvas id="sectorCanvas" class="canvas" style="margin-top:20px"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL AGUARDE -->
+<div class="modal-backdrop" id="backdrop2"></div>
+<div class="modal" id="modal2">
+  <div class="panel">
+    <header>
+      <div class="title">
+        <div class="h">Conteúdo em Atualização</div>
+        <div class="s">Ciclo editorial em consolidação</div>
+      </div>
+      <button class="x" id="btnClose2">×</button>
+    </header>
+    <div class="content">
+      <p class="small">
+        Ciclos e recortes são consolidados progressivamente, com preservação de coerência histórica e rastreabilidade. Acesso a camadas reservadas depende de escopo, governança e contexto institucional.
+      </p>
+      <div style="margin-top:20px" class="row">
+        <a href="./index.html" class="btn primary">Voltar ao Portal</a>
+        <a href="./radar.html" class="btn ghost">Abrir Radar</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT BOT -->
+<div class="chatBot">
+  <div class="chatBubble" id="chatToggle">
+    <div class="chatPulse"></div>
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="15.5" cy="9.5" r="1.5"/>
+      <circle cx="8.5" cy="9.5" r="1.5"/>
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.7.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/>
+      <path d="M12 17c-2.21 0-4-1.79-4-4h8c0 2.21-1.79 4-4 4z" opacity="0.5"/>
+    </svg>
+  </div>
+
+  <div class="chatWindow" id="chatWindow">
+    <div class="chatHeader">
+      <div class="chatAvatar">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="15.5" cy="9.5" r="1.5"/>
+          <circle cx="8.5" cy="9.5" r="1.5"/>
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.7.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/>
+        </svg>
+      </div>
+      <div class="chatHeaderText">
+        <h3>Guia Institucional</h3>
+        <p>Termômetro Regulatório · Navegação</p>
+      </div>
+      <button class="chatClose" id="chatWindowClose">×</button>
+    </div>
+
+    <div class="chatBody" id="chatBody"></div>
+  </div>
+</div>
+
+<script>
+// Utility functions
+const el = (s)=> document.querySelector(s);
+const els = (s)=> document.querySelectorAll(s);
+const clamp = (v,min,max)=> Math.max(min, Math.min(max, v));
+const escapeHTML = (str)=> {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+};
+
+function smoothScrollTo(selector){
+  const target = document.querySelector(selector);
+  if(target) {
+    const offset = 80;
+    const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+    window.scrollTo({top, behavior:"smooth"});
+  }
+}
+
+// Wire scroll buttons
+els("[data-scroll]").forEach(btn=>{
+  btn.addEventListener("click", ()=> {
+    const target = btn.getAttribute("data-scroll");
+    smoothScrollTo(target);
+  });
+});
+
+// Data for Janeiro 2026
+const DATA_2026_01 = {
+  thermometers: [
+    {label:"Escrutínio", value:68},
+    {label:"Exposição", value:62},
+    {label:"Evidência", value:71},
+    {label:"Reação", value:58}
+  ],
+  scenario: [45,48,52,58,61,64,68,72,71,68,65,68],
+  fragile: [68,72,76,78,81,84],
+  govern: [68,66,64,62,60,59],
+  sectors: {
+    financeiro: {
+      label:"Setor Financeiro",
+      value:72,
+      signals:[
+        "BACEN: consolidação de exigências de governança e integridade de dados com janela de adequação em 2026",
+        "Aumento de consultas e fricção interpretativa em instituições com maturidade desigual",
+        "Pressão por consistência de controles em operações digitais e cadeias terceirizadas",
+        "Supervisão ampliada em arranjos de pagamento, crédito e serviços de base tecnológica"
+      ],
+      read:"Patamar elevado e estável, com tendência a endurecimento em cadeias menos maduras. A assimetria de controles costuma migrar para exposição reputacional e fricção sancionatória quando o sistema testa consistência e rastreabilidade.",
+      series:[58,61,64,68,71,74,72,70,69,71,73,72]
+    },
+    seguros:{
+      label:"Setor de Seguros",
+      value:65,
+      signals:[
+        "SUSEP: intensificação de cobrança sobre comunicação e governança de eventos cibernéticos",
+        "Pressão por padronização e consistência de registros, prazos e trilha decisória",
+        "Redução de tolerância a lacunas de controles e respostas improvisadas",
+        "Crescimento de fricção contratual em sinistros, terceiros críticos e perícia"
+      ],
+      read:"Pressão moderada com vetor de consolidação. O risco institucional tende a emergir em comunicação, cadeia de decisão e coerência de resposta. Precedentes do ciclo atual podem reordenar expectativas setoriais.",
+      series:[52,54,56,58,61,64,65,64,63,64,66,65]
+    },
+    saude:{
+      label:"Setor de Saúde",
+      value:70,
+      signals:[
+        "ANPD: agenda intensificada sobre dados sensíveis e biométricos, com impacto setorial direto",
+        "Pressão por governança de acesso, autenticação e rastreabilidade em ambientes assistenciais",
+        "Fricção crescente em cadeias com múltiplos operadores e fornecedores tecnológicos",
+        "Exposição reputacional elevada em incidentes envolvendo dados de alta criticidade"
+      ],
+      read:"Patamar alto, com risco de contágio reputacional e escalada por sensibilidade do ativo informacional. A assimetria de governança entre operadores e fornecedores tende a ser o principal amplificador.",
+      series:[54,56,59,62,65,68,70,69,68,69,71,70]
+    },
+    energia:{
+      label:"Setor de Energia",
+      value:58,
+      signals:[
+        "ANEEL: aumento de pressão sobre continuidade, criticidade e cibersegurança em infraestrutura",
+        "Foco em resiliência operacional e controles em ambientes de alta dependência sistêmica",
+        "Relevância crescente de ESG e governança em concessões e relações contratuais",
+        "Necessidade estrutural de investimento em segurança operacional e gestão de terceiros"
+      ],
+      read:"Pressão moderada com potencial de aceleração por criticidade. O risco institucional tende a emergir quando continuidade e segurança deixam de ser promessa e passam a ser evidência verificável.",
+      series:[48,50,52,54,56,58,58,57,56,57,59,58]
+    },
+    telecom:{
+      label:"Setor de Telecom",
+      value:63,
+      signals:[
+        "ANATEL: cobrança por continuidade, contingência e qualidade de serviço em condições adversas",
+        "Fricção sobre responsabilidade em cadeias com terceiros e infraestrutura compartilhada",
+        "Pressão sancionatória recorrente por atendimento e experiência do usuário",
+        "Complexidade adicional por uso de IA e tratamento de dados em grande escala"
+      ],
+      read:"Pressão moderada-alta com exposição pública persistente. A governança de terceiros e a coerência de contingência operam como divisor de risco, sobretudo em falhas de alta visibilidade.",
+      series:[54,56,58,60,62,64,63,62,61,62,64,63]
+    },
+    infraestrutura:{
+      label:"Infraestrutura",
+      value:60,
+      signals:[
+        "Órgãos de controle: parâmetros mínimos de cibersegurança e gestão de riscos em serviços críticos",
+        "Efeito indireto em fornecedores privados, licitações e contratos de alta relevância",
+        "Elevação de exigências de segurança como critério de habilitação e continuidade",
+        "Debate sobre responsabilidade compartilhada e governança de incidentes"
+      ],
+      read:"Pressão estável com deslocamento para cadeia de fornecedores. A exigência se move de “capacidade declarada” para “capacidade demonstrada”, com custo direto em contratação e operação.",
+      series:[50,52,54,56,58,60,60,59,58,59,61,60]
+    }
+  }
+};
+
+// Render thermometers
+function renderThermometers(){
+  DATA_2026_01.thermometers.forEach((t,i)=>{
+    const fillEl = el(`#fill${i+1}`);
+    const valEl = el(`#val${i+1}`);
+    if(fillEl && valEl){
+      setTimeout(()=>{
+        fillEl.style.width = clamp(t.value,0,100) + "%";
+        valEl.textContent = t.value;
+      }, i*100);
+    }
+  });
+}
+
+// Draw charts
+function drawLineChart(canvas, series, opts={}){
+  if(!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width = canvas.offsetWidth * 2;
+  const h = canvas.height = canvas.offsetHeight * 2;
+  ctx.clearRect(0,0,w,h);
+
+  const pad = 60;
+  const n = series.length;
+  const x = i=> pad + ((w - 2*pad)/(n-1))*i;
+  const yMax = Math.max(...series) * 1.1;
+  const y = v=> h - pad - ((h - 2*pad)/yMax)*v;
+
+  // Grid
+  ctx.strokeStyle = "rgba(255,255,255,.06)";
+  ctx.lineWidth = 1;
+  for(let i=0;i<=4;i++){
+    const yy = pad + ((h - 2*pad)/4)*i;
+    ctx.beginPath();
+    ctx.moveTo(pad, yy);
+    ctx.lineTo(w-pad, yy);
+    ctx.stroke();
+  }
+
+  // Area
+  if(opts.area){
+    ctx.beginPath();
+    ctx.moveTo(x(0), h-pad);
+    for(let i=0;i<n;i++) ctx.lineTo(x(i), y(series[i]));
+    ctx.lineTo(x(n-1), h-pad);
+    ctx.closePath();
+    if(opts.area === "risk"){
+      ctx.fillStyle = "rgba(255,107,107,.12)";
+    } else if(opts.area === "ok"){
+      ctx.fillStyle = "rgba(70,211,154,.12)";
+    } else {
+      const grad = ctx.createLinearGradient(0, pad, 0, h-pad);
+      grad.addColorStop(0, "rgba(110,168,255,.22)");
+      grad.addColorStop(1, "rgba(110,168,255,.02)");
+      ctx.fillStyle = grad;
+    }
+    ctx.fill();
+  }
+
+  // Line
+  ctx.beginPath();
+  ctx.moveTo(x(0), y(series[0]));
+  for(let i=1;i<n;i++) ctx.lineTo(x(i), y(series[i]));
+
+  if(opts.line === "risk"){
+    ctx.strokeStyle = "rgba(255,107,107,.90)";
+  } else if(opts.line === "ok"){
+    ctx.strokeStyle = "rgba(70,211,154,.92)";
+  } else {
+    const grad = ctx.createLinearGradient(0, 0, w, 0);
+    grad.addColorStop(0, "rgba(110,168,255,.90)");
+    grad.addColorStop(1, "rgba(156,196,255,.70)");
+    ctx.strokeStyle = grad;
+  }
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Points
+  ctx.fillStyle = "rgba(234,240,255,.92)";
+  for(let i=0;i<n;i+=2){
+    ctx.beginPath();
+    ctx.arc(x(i), y(series[i]), 4, 0, Math.PI*2);
+    ctx.fill();
+  }
+}
+
+function drawQuadMap(canvas, values){
+  if(!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width = canvas.offsetWidth * 2;
+  const h = canvas.height = canvas.offsetHeight * 2;
+  ctx.clearRect(0,0,w,h);
+
+  const pad = 70;
+  const cx = w/2, cy = h/2;
+  const r = Math.min(w,h)/2 - pad;
+
+  // Circles
+  ctx.strokeStyle = "rgba(255,255,255,.08)";
+  ctx.lineWidth = 1.5;
+  for(let k=1;k<=4;k++){
+    ctx.beginPath();
+    ctx.arc(cx, cy, (r/4)*k, 0, Math.PI*2);
+    ctx.stroke();
+  }
+
+  // Cross
+  ctx.beginPath();
+  ctx.moveTo(cx, cy-r); ctx.lineTo(cx, cy+r);
+  ctx.moveTo(cx-r, cy); ctx.lineTo(cx+r, cy);
+  ctx.strokeStyle = "rgba(255,255,255,.10)";
+  ctx.stroke();
+
+  const toPt = (idx, v)=>{
+    const ang = (-Math.PI/2) + (Math.PI/2)*idx;
+    const rr = r * (clamp(v,0,100)/100);
+    return [cx + Math.cos(ang)*rr, cy + Math.sin(ang)*rr];
+  };
+
+  const pts = values.map((v,i)=> toPt(i,v));
+
+  // Shape
+  ctx.beginPath();
+  ctx.moveTo(pts[0][0], pts[0][1]);
+  for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i][0], pts[i][1]);
+  ctx.closePath();
+  ctx.fillStyle = "rgba(110,168,255,.18)";
+  ctx.fill();
+  ctx.strokeStyle = "rgba(110,168,255,.80)";
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Labels
+  const labels = ["Escrutínio","Exposição","Evidência","Reação"];
+  ctx.fillStyle = "rgba(234,240,255,.80)";
+  ctx.font = "bold 24px ui-sans-serif, system-ui";
+  const labelPos = [
+    [cx, cy-r-16],
+    [cx+r+16, cy+8],
+    [cx, cy+r+32],
+    [cx-r-16, cy+8],
+  ];
+  const aligns = ["center","left","center","right"];
+  for(let i=0;i<4;i++){
+    ctx.textAlign = aligns[i];
+    ctx.fillText(labels[i], labelPos[i][0], labelPos[i][1]);
+  }
+}
+
+// Sector modal
+let currentSector = "financeiro";
+
+function openSectorModal(sectorKey){
+  const sector = DATA_2026_01.sectors[sectorKey];
+  if(!sector){
+    alert("Setor em desenvolvimento");
+    return;
+  }
+  currentSector = sectorKey;
+
+  el("#modalTitle").textContent = sector.label;
+  el("#modalSub").textContent = "Janeiro 2026 · Recorte editorial";
+
+  const thermo = el("#sectorThermo");
+  thermo.innerHTML = `
+    <div class="thermo-item">
+      <div class="thermo-name">Intensidade</div>
+      <div class="barwrap">
+        <div class="bar"><div class="fill" style="width:0%"></div></div>
+      </div>
+      <div class="value">${sector.value}</div>
+    </div>
+  `;
+  setTimeout(()=>{
+    thermo.querySelector(".fill").style.width = clamp(sector.value,0,100) + "%";
+  }, 100);
+
+  const ul = el("#sectorSignals");
+  ul.innerHTML = sector.signals.map(s=> `
+    <li class="li">
+      <span class="bullet"></span>
+      <div class="li-content">${escapeHTML(s)}</div>
+    </li>
+  `).join("");
+
+  el("#sectorRead").textContent = sector.read;
+
+  drawLineChart(el("#sectorCanvas"), sector.series, {area:"", line:""});
+
+  el("#backdrop").style.display = "block";
+  el("#modal").style.display = "grid";
+  document.body.style.overflow = "hidden";
+}
+
+function closeModal(){
+  el("#backdrop").style.display = "none";
+  el("#modal").style.display = "none";
+  document.body.style.overflow = "";
+}
+
+function closeWaitModal(){
+  el("#backdrop2").style.display = "none";
+  el("#modal2").style.display = "none";
+  document.body.style.overflow = "";
+}
+
+// Wire sectors
+els(".chip").forEach(chip=>{
+  chip.addEventListener("click", ()=>{
+    els(".chip").forEach(c=> c.classList.remove("active"));
+    chip.classList.add("active");
+    openSectorModal(chip.getAttribute("data-sector"));
+  });
+});
+
+el("#btnClose").addEventListener("click", closeModal);
+el("#backdrop").addEventListener("click", closeModal);
+el("#btnClose2").addEventListener("click", closeWaitModal);
+el("#backdrop2").addEventListener("click", closeWaitModal);
+document.addEventListener("keydown", (e)=>{ if(e.key==="Escape"){ closeModal(); closeWaitModal(); }});
+
+// CHAT BOT
+const chatToggle = el("#chatToggle");
+const chatWindow = el("#chatWindow");
+const chatWindowClose = el("#chatWindowClose");
+const chatBody = el("#chatBody");
+
+const GUIDE_FLOW = {
+  welcome: {
+    message:"Guia institucional do Termômetro. Panorama, tendência e recorte setorial — em linguagem de governança.",
+    options:[
+      {emoji:"🧭", text:"O que esta página fixa", action:"o_que_e"},
+      {emoji:"📊", text:"Ir ao cenário agregado", action:"cenario"},
+      {emoji:"🔍", text:"Abrir recortes setoriais", action:"recortes"},
+      {emoji:"🧾", text:"Síntese executiva", action:"leitura"},
+      {emoji:"🏛️", text:"Voltar ao Portal (Home)", action:"home"},
+      {emoji:"🛰️", text:"Abrir Radar", action:"radar"}
+    ]
+  }
+};
+
+function addChatMessage(msg, options=null){
+  const div = document.createElement("div");
+  div.className = "chatMessage bot";
+
+  let html = `
+    <div class="chatMessageAvatar">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="15.5" cy="9.5" r="1.5"/>
+        <circle cx="8.5" cy="9.5" r="1.5"/>
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.7.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/>
+      </svg>
+    </div>
+    <div class="chatMessageContent">
+      <div class="chatBubbleText">${msg}</div>
+  `;
+
+  if(options){
+    html += '<div class="chatOptions">';
+    options.forEach(opt=>{
+      html += `
+        <div class="chatOption" data-action="${opt.action}">
+          <span class="emoji">${opt.emoji}</span>
+          <span class="text">${opt.text}</span>
+        </div>
+      `;
+    });
+    html += '</div>';
+  }
+
+  html += '</div></div>';
+  div.innerHTML = html;
+  chatBody.appendChild(div);
+  chatBody.scrollTop = chatBody.scrollHeight;
+
+  if(options){
+    div.querySelectorAll(".chatOption").forEach(opt=>{
+      opt.addEventListener("click", ()=> handleChatAction(opt.getAttribute("data-action")));
+    });
+  }
+}
+
+function handleChatAction(action){
+  if(action === "o_que_e"){
+    addChatMessage("Camada pública e editorial: patamar de pressão, tendência e recorte setorial. Não substitui decisão interna, não emite recomendação operacional e não antecipa estratégia. O foco é coerência, continuidade e custo institucional.");
+  } else if(action === "cenario"){
+    addChatMessage("Cenário agregado: patamar e vetor de tendência do ciclo.");
+    setTimeout(()=> smoothScrollTo("#cenario"), 450);
+    setTimeout(()=> chatWindow.classList.remove("active"), 1350);
+  } else if(action === "recortes"){
+    addChatMessage("Recortes setoriais: onde a fricção tende a se materializar e onde precedentes se formam.");
+    setTimeout(()=> smoothScrollTo("#recortes"), 450);
+    setTimeout(()=> chatWindow.classList.remove("active"), 1350);
+  } else if(action === "leitura"){
+    addChatMessage("Síntese executiva: condição do ambiente, vetores e simulações plausíveis.");
+    setTimeout(()=> smoothScrollTo("#leitura"), 450);
+    setTimeout(()=> chatWindow.classList.remove("active"), 1350);
+  } else if(action === "home"){
+    window.location.href = "./index.html";
+  } else if(action === "radar"){
+    window.location.href = "./radar.html";
+  }
+}
+
+function openGuideChat(){
+  chatWindow.classList.add("active");
+  if(chatBody.children.length === 0){
+    addChatMessage(GUIDE_FLOW.welcome.message, GUIDE_FLOW.welcome.options);
+  }
+}
+
+chatToggle.addEventListener("click", openGuideChat);
+chatWindowClose.addEventListener("click", ()=> chatWindow.classList.remove("active"));
+
+// Initialize
+function init(){
+  renderThermometers();
+  drawLineChart(el("#scenarioCanvas"), DATA_2026_01.scenario, {area:"", line:""});
+  drawQuadMap(el("#radarCanvas"), DATA_2026_01.thermometers.map(t=>t.value));
+  drawLineChart(el("#fragileCanvas"), DATA_2026_01.fragile, {area:"risk", line:"risk"});
+  drawLineChart(el("#governCanvas"), DATA_2026_01.govern, {area:"ok", line:"ok"});
+}
+
+init();
+</script>
+</body>
+</html>
