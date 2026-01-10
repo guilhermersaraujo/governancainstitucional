@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>Autor — Guilherme Rafael de Souza Araujo</title>
+<meta name="description" content="Guilherme Rafael de Souza Araujo — Legal Counsel, governança de dados, cibergovernança financeira e soberania informacional.">
+<meta name="author" content="Guilherme Rafael de Souza Araujo">
+<meta name="creator" content="Guilherme Rafael de Souza Araujo">
+<meta name="publisher" content="AUCTORIS — Portal Institucional de Leitura Regulatória">
+<meta name="robots" content="index, follow">
+
+<style>
+:root{
+  --bg0:#050c16;
+  --bg1:#06101c;
+  --panel:#0b1627;
+  --ink:#eaf0ff;
+  --muted:#b7c3df;
+  --line:rgba(255,255,255,.12);
+  --accent:#9fb7ff;
+  --accent2:#d7e2ff;
+  --warn:#ffd38a;
+  --risk:#ff7a7a;
+  --ok:#7fe0b5;
+  --shadow:0 20px 60px rgba(0,0,0,.45);
+  --radius:22px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  --sans:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+}
+@media (prefers-color-scheme: light){
+  :root{
+    --bg0:#f6f7fb;
+    --bg1:#eef1f8;
+    --panel:#ffffff;
+    --ink:#0b1424;
+    --muted:#3e4b65;
+    --line:rgba(11,20,36,.12);
+    --accent:#2547ff;
+    --accent2:#10224f;
+    --warn:#7b5208;
+    --risk:#7c1d1d;
+    --ok:#0f5132;
+    --shadow:0 18px 48px rgba(11,20,36,.10);
+  }
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:var(--sans);
+  color:var(--ink);
+  background:
+    radial-gradient(1200px 700px at 70% 10%, rgba(159,183,255,.12), transparent 55%),
+    radial-gradient(900px 600px at 20% 90%, rgba(159,183,255,.08), transparent 60%),
+    linear-gradient(180deg,var(--bg0),var(--bg1) 60%,var(--bg0));
+}
+
+.gridFX{
+  position:fixed; inset:0; pointer-events:none; opacity:.35;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(ellipse at 50% 15%, black 35%, transparent 70%);
+}
+@media (prefers-color-scheme: light){
+  .gridFX{
+    opacity:.18;
+    background-image:
+      linear-gradient(to right, rgba(11,20,36,.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(11,20,36,.04) 1px, transparent 1px);
+  }
+}
+
+.wrap{max-width:1200px;margin:0 auto;padding:26px 18px 90px}
+
+.topbar{
+  position:sticky;top:0;z-index:40;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  background:rgba(5,12,22,.85);
+  border-bottom:1px solid var(--line);
+}
+@media (prefers-color-scheme: light){
+  .topbar{ background:rgba(246,247,251,.78); }
+}
+.topbar .inner{
+  max-width:1200px;margin:0 auto;
+  padding:14px 18px;
+  display:flex;justify-content:space-between;align-items:center;gap:14px;
+}
+.brand{display:flex;flex-direction:column;gap:2px;min-width:240px}
+.brand h1{
+  margin:0;
+  font-size:13px;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  font-weight:800;
+}
+.brand p{
+  margin:0;
+  font-size:12px;
+  color:var(--muted);
+  letter-spacing:.06em;
+}
+.nav{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;
+}
+.nav a{
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--muted);
+  text-decoration:none;
+  padding:9px 12px;
+  border-radius:999px;
+  border:1px solid transparent;
+  transition:transform .12s ease, background .15s ease, border-color .15s ease, color .15s ease;
+}
+.nav a:hover{
+  transform:translateY(-1px);
+  background:rgba(255,255,255,.05);
+  border-color:rgba(159,183,255,.22);
+  color:var(--accent2);
+}
+.nav a[aria-current="page"]{
+  background:rgba(255,255,255,.06);
+  border-color:rgba(159,183,255,.30);
+  color:var(--accent2);
+}
+
+.langSwitch{
+  display:flex;
+  gap:6px;
+  align-items:center;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--line);
+}
+.langSwitch button{
+  font-size:11px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--muted);
+  background:transparent;
+  border:none;
+  cursor:pointer;
+  padding:4px 8px;
+  border-radius:6px;
+  transition:all .15s ease;
+}
+.langSwitch button:hover{
+  background:rgba(255,255,255,.06);
+  color:var(--accent2);
+}
+.langSwitch button.active{
+  background:rgba(159,183,255,.18);
+  color:var(--accent2);
+  font-weight:700;
+}
+
+.panel{
+  border-radius:var(--radius);
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.04);
+  box-shadow:var(--shadow);
+}
+@media (prefers-color-scheme: light){
+  .panel{ background:rgba(255,255,255,.86); }
+}
+.panel .pad{padding:28px}
+
+.kicker{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.75);
+  margin-bottom:16px;
+}
+@media (prefers-color-scheme: light){
+  .kicker{ color:rgba(11,20,36,.70); }
+}
+
+.title{
+  margin:0;
+  font-size:36px;
+  line-height:1.15;
+  font-weight:850;
+}
+.title em{color:var(--accent);font-style:normal}
+
+.lead{
+  margin-top:16px;
+  font-size:15px;
+  line-height:1.7;
+  color:var(--muted);
+  max-width:74ch;
+}
+
+.chipList{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+.chip{
+  font-size:12px;
+  padding:7px 14px;
+  border-radius:999px;
+  background:rgba(159,183,255,.12);
+  border:1px solid rgba(159,183,255,.28);
+  color:var(--accent2);
+  text-decoration:none;
+  transition:all .15s ease;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.chip:hover{
+  background:rgba(159,183,255,.20);
+  border-color:rgba(159,183,255,.45);
+  transform:translateY(-1px);
+}
+.chip svg{
+  width:14px;
+  height:14px;
+  fill:currentColor;
+}
+
+.section{margin-top:48px}
+.sectionHead{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:20px;
+}
+.sectionIcon{
+  font-size:28px;
+  line-height:1;
+}
+.sectionTitle{
+  font-size:24px;
+  font-weight:800;
+  letter-spacing:.04em;
+  margin:0;
+}
+.sectionTitle em{color:var(--accent);font-style:normal}
+.sectionDesc{
+  font-size:14px;
+  line-height:1.7;
+  color:var(--muted);
+  margin-top:8px;
+  max-width:68ch;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:14px 24px;
+  border-radius:12px;
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-decoration:none;
+  cursor:pointer;
+  border:1px solid;
+  transition:all .2s ease;
+}
+.btnPrimary{
+  background:linear-gradient(135deg,rgba(159,183,255,.22),rgba(159,183,255,.08));
+  color:var(--accent2);
+  border-color:rgba(159,183,255,.35);
+}
+.btnPrimary:hover{
+  transform:translateY(-2px);
+  background:linear-gradient(135deg,rgba(159,183,255,.32),rgba(159,183,255,.14));
+  border-color:rgba(159,183,255,.55);
+  box-shadow:0 12px 28px rgba(159,183,255,.18);
+}
+
+.divider{
+  height:1px;
+  background:var(--line);
+  margin:32px 0;
+}
+
+.infoBlock{
+  margin-bottom:28px;
+}
+.infoBlock h4{
+  font-size:16px;
+  font-weight:800;
+  margin:0 0 12px;
+  color:var(--accent2);
+}
+.infoBlock p{
+  font-size:14px;
+  line-height:1.7;
+  color:var(--muted);
+  margin:0;
+}
+.infoBlock ul{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+.infoBlock li{
+  padding:10px 0;
+  border-bottom:1px solid var(--line);
+}
+.infoBlock li:last-child{
+  border-bottom:none;
+}
+.infoBlock li strong{
+  font-size:14px;
+  color:var(--ink);
+  display:block;
+  margin-bottom:4px;
+}
+.infoBlock li span{
+  font-size:12px;
+  color:var(--muted);
+}
+
+.micro{
+  margin-top:12px;
+  font-size:12px;
+  line-height:1.6;
+  color:rgba(255,255,255,.74);
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+@media (prefers-color-scheme: light){
+  .micro{ color:rgba(11,20,36,.68); }
+}
+.micro a{
+  color:var(--accent2);
+  text-decoration:none;
+  border-bottom:1px solid rgba(159,183,255,.35);
+}
+.micro a:hover{border-bottom-color:rgba(159,183,255,.9)}
+
+.contactList{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.contactItem{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 18px;
+  border-radius:12px;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--line);
+  transition:all .15s ease;
+}
+@media (prefers-color-scheme: light){
+  .contactItem{ background:rgba(11,20,36,.04); }
+}
+.contactItem:hover{
+  background:rgba(159,183,255,.10);
+  border-color:rgba(159,183,255,.30);
+  transform:translateX(4px);
+}
+.contactIcon{
+  font-size:20px;
+  line-height:1;
+}
+.contactText{
+  flex:1;
+}
+.contactLabel{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  color:var(--muted);
+  margin-bottom:4px;
+}
+.contactValue{
+  font-size:14px;
+  font-weight:700;
+  color:var(--ink);
+}
+.contactValue a{
+  color:var(--accent2);
+  text-decoration:none;
+  transition:color .15s ease;
+}
+.contactValue a:hover{
+  color:var(--accent);
+}
+
+@media(max-width:640px){
+  .title{font-size:28px}
+  .sectionTitle{font-size:20px}
+  .topbar .inner{flex-wrap:wrap}
+  .brand{min-width:auto}
+}
+</style>
+</head>
+
+<body>
+<div style="display:none">
+  Autor: Guilherme Rafael de Souza Araujo
+  Portal Institucional de Leitura Regulatória — AUCTORIS
+  Legal Counsel
+  Governança de Dados
+  Cibergovernança
+  Regulação Financeira
+  Soberania Informacional
+  Extraterritorialidade Algorítmica
+  Integridade Decisória
+  Accountability Algorítmica
+  ORCID: 0009-0004-4756-1515
+  DOI: 10.5281/zenodo.18209252
+  Working Paper 2026
+  Guerra dos Dados
+  Direito de Trânsito Aplicado
+</div>
+<div class="gridFX"></div>
+
+<div class="topbar">
+  <div class="inner">
+    <div class="brand">
+      <h1>AUCTORIS</h1>
+      <p>Leitura Regulatória & Integridade Decisória</p>
+    </div>
+    <nav class="nav">
+      <a href="index.html">Portal</a>
+      <a href="termometro.html">Termômetro</a>
+      <a href="palestra.html">Palestra</a>
+      <a href="autor.html" aria-current="page">Autor</a>
+      <div class="langSwitch">
+        <button class="langBtn active" data-target="pt">Português</button>
+        <button class="langBtn" data-target="en" onclick="location.href='autor-en.html'">English</button>
+      </div>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- BIO INSTITUCIONAL -->
+<section style="margin-top:32px">
+  <div class="panel">
+    <div class="pad">
+      <div class="kicker">AUTORIA INSTITUCIONAL</div>
+      <h2 class="title">Guilherme Rafael de Souza <em>Araujo</em></h2>
+      <p class="lead">
+        Legal Counsel, especialização em governança de dados, cibergovernança e regulação financeira.
+        Atuação institucional em soberania informacional, extraterritorialidade algorítmica e integridade decisória para infraestruturas críticas.
+        Atuação voltada à estruturação de regimes regulatórios, análise de padrões sancionatórios e responsabilização institucional de sistemas algorítmicos.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- IDENTIFICADORES -->
+<section class="section">
+  <div class="sectionHead">
+    <div class="sectionIcon">🔗</div>
+    <div>
+      <h3 class="sectionTitle">Identificadores <em>Públicos</em></h3>
+      <p class="sectionDesc">Rastreabilidade institucional e prova de autoria registrada.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="pad">
+      <div class="chipList">
+        <a href="https://orcid.org/0009-0004-4756-1515" target="_blank" class="chip">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947s-.422.947-.947.947a.95.95 0 0 1-.947-.947c0-.525.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.016-5.325 5.016h-3.919V7.416z"/></svg>
+          ORCID: 0009-0004-4756-1515
+        </a>
+        <a href="https://scholar.google.com/citations?user=VmGXJUwAAAAJ&hl=pt-BR&authuser=1" target="_blank" class="chip">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 9a8 8 0 0 1 7.162 4.44L24 9.5z"/></svg>
+          Google Scholar
+        </a>
+        <a href="https://doi.org/10.5281/zenodo.18209252" target="_blank" class="chip">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          DOI: 10.5281/zenodo.18209252
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUÇÃO INTELECTUAL -->
+<section class="section">
+  <div class="sectionHead">
+    <div class="sectionIcon">📚</div>
+    <div>
+      <h3 class="sectionTitle">Produção <em>Intelectual</em></h3>
+      <p class="sectionDesc">Registro público de autoria científica e produção editorial.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="pad">
+      
+      <!-- WORKING PAPER -->
+      <div class="infoBlock">
+        <h4>Working Paper (2026)</h4>
+        <p>
+          Registro público de autoria e delimitação conceitual: soberania informacional, extraterritorialidade algorítmica e governança de dados em infraestruturas críticas.
+          Análise institucional sobre poder regulatório, accountability algorítmica e integridade decisória em sistemas financeiros.
+          Documento de trabalho destinado ao registro de anterioridade intelectual e à consolidação de linha de pesquisa.
+        </p>
+        <div class="micro">
+          <span>DOI:</span>
+          <a href="https://doi.org/10.5281/zenodo.18209252" target="_blank">10.5281/zenodo.18209252</a>
+        </div>
+        <div class="micro">
+          <span>Zenodo Record:</span>
+          <a href="https://zenodo.org/records/18209252" target="_blank">zenodo.org/records/18209252</a>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- LIVROS APROVADOS -->
+      <div class="infoBlock">
+        <h4>Livros Aprovados (Editora Juspodivm)</h4>
+        <p style="margin-bottom:16px">
+          Obras em desenvolvimento editorial, publicação prevista para 2026 conforme cronograma interno.
+          Registro de escopo temático e autoria realizado previamente à submissão integral dos manuscritos.
+        </p>
+        <ul>
+          <li>
+            <strong>Guerra dos Dados</strong>
+            <span>Soberania Informacional & Sistema Financeiro</span>
+          </li>
+          <li>
+            <strong>Direito de Trânsito Aplicado</strong>
+            <span>Defesa Administrativa e Judicial, Prova Técnica, Execução Fiscal e Governança Institucional no Trânsito</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EIXOS DE PESQUISA -->
+<section class="section">
+  <div class="sectionHead">
+    <div class="sectionIcon">🎯</div>
+    <div>
+      <h3 class="sectionTitle">Eixos de <em>Pesquisa</em></h3>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="pad">
+      <p class="lead">
+        Soberania informacional e extraterritorialidade algorítmica em infraestruturas críticas.
+        Accountability algorítmica, integridade decisória e poder regulatório em sistemas financeiros.
+        Governança de dados, cibergovernança e frameworks de supervisão para ambiente regulatório.
+        Padrões sancionatórios, coerência normativa e integridade probatória institucional.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATO INSTITUCIONAL -->
+<section class="section">
+  <div class="sectionHead">
+    <div class="sectionIcon">✉️</div>
+    <div>
+      <h3 class="sectionTitle">Contato <em>Institucional</em></h3>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="pad">
+      <div class="contactList">
+        <div class="contactItem">
+          <div class="contactIcon">🏢</div>
+          <div class="contactText">
+            <div class="contactLabel">Institucional</div>
+            <div class="contactValue">
+              <a href="mailto:contato@grsaengine.com">contato@grsaengine.com</a>
+            </div>
+          </div>
+        </div>
+        <div class="contactItem">
+          <div class="contactIcon">👤</div>
+          <div class="contactText">
+            <div class="contactLabel">Pessoal</div>
+            <div class="contactValue">
+              <a href="mailto:guilhermegrsaraujo@proton.me">guilhermegrsaraujo@proton.me</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VOLTAR AO PORTAL -->
+<section style="margin-top:48px;text-align:center">
+  <a href="index.html" class="btn btnPrimary">
+    <span>←</span>
+    <span>Voltar ao Portal</span>
+  </a>
+</section>
+
+<!-- RODAPÉ -->
+<footer style="margin-top:60px;padding-top:28px;border-top:1px solid var(--line);text-align:center">
+  <p style="font-size:12px;color:var(--muted);margin:0;line-height:1.8">
+    © 2026 · Guilherme Rafael de Souza Araujo<br>
+    AUCTORIS — Portal Institucional de Leitura Regulatória
+  </p>
+</footer>
+
+</div>
+
+<script>
+document.querySelectorAll('.langBtn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.langBtn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>

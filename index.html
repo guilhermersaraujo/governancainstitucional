@@ -1,0 +1,1592 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>AUCTORIS — Sistema Institucional de Leitura Decisória</title>
+<meta name="description" content="AUCTORIS — leitura regulatória, padrões sancionatórios e coerência decisória para diretoria e conselho. Acesso público e acesso restrito por organização.">
+<meta name="author" content="Guilherme Rafael de Souza Araujo">
+<meta name="creator" content="Guilherme Rafael de Souza Araujo">
+<meta name="publisher" content="AUCTORIS — Portal Institucional de Leitura Regulatória">
+<meta name="robots" content="index, follow">
+
+<style>
+:root{
+  --bg0:#050c16;
+  --bg1:#06101c;
+  --panel:#0b1627;
+  --ink:#eaf0ff;
+  --muted:#b7c3df;
+  --line:rgba(255,255,255,.12);
+  --accent:#9fb7ff;
+  --accent2:#d7e2ff;
+  --warn:#ffd38a;
+  --risk:#ff7a7a;
+  --ok:#7fe0b5;
+  --shadow:0 20px 60px rgba(0,0,0,.45);
+  --radius:22px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  --sans:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+}
+@media (prefers-color-scheme: light){
+  :root{
+    --bg0:#f6f7fb;
+    --bg1:#eef1f8;
+    --panel:#ffffff;
+    --ink:#0b1424;
+    --muted:#3e4b65;
+    --line:rgba(11,20,36,.12);
+    --accent:#2547ff;
+    --accent2:#10224f;
+    --warn:#7b5208;
+    --risk:#7c1d1d;
+    --ok:#0f5132;
+    --shadow:0 18px 48px rgba(11,20,36,.10);
+  }
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:var(--sans);
+  color:var(--ink);
+  background:
+    radial-gradient(1200px 700px at 70% 10%, rgba(159,183,255,.12), transparent 55%),
+    radial-gradient(900px 600px at 20% 90%, rgba(159,183,255,.08), transparent 60%),
+    linear-gradient(180deg,var(--bg0),var(--bg1) 60%,var(--bg0));
+}
+
+/* GRID SUTIL */
+.gridFX{
+  position:fixed; inset:0; pointer-events:none; opacity:.35;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(ellipse at 50% 15%, black 35%, transparent 70%);
+}
+@media (prefers-color-scheme: light){
+  .gridFX{
+    opacity:.18;
+    background-image:
+      linear-gradient(to right, rgba(11,20,36,.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(11,20,36,.04) 1px, transparent 1px);
+  }
+}
+
+.wrap{max-width:1200px;margin:0 auto;padding:26px 18px 90px}
+
+/* TOPBAR */
+.topbar{
+  position:sticky;top:0;z-index:40;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  background:rgba(5,12,22,.85);
+  border-bottom:1px solid var(--line);
+}
+@media (prefers-color-scheme: light){
+  .topbar{ background:rgba(246,247,251,.78); }
+}
+.topbar .inner{
+  max-width:1200px;margin:0 auto;
+  padding:14px 18px;
+  display:flex;justify-content:space-between;align-items:center;gap:14px;
+}
+.brand{display:flex;flex-direction:column;gap:2px;min-width:240px}
+.brand h1{
+  margin:0;
+  font-size:13px;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  font-weight:800;
+}
+.brand p{
+  margin:0;
+  font-size:12px;
+  color:var(--muted);
+  letter-spacing:.06em;
+}
+.nav{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;
+}
+.nav a{
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--muted);
+  text-decoration:none;
+  padding:9px 12px;
+  border-radius:999px;
+  border:1px solid transparent;
+  transition:transform .12s ease, background .15s ease, border-color .15s ease, color .15s ease;
+}
+.nav a:hover{
+  transform:translateY(-1px);
+  background:rgba(255,255,255,.05);
+  border-color:rgba(159,183,255,.22);
+  color:var(--accent2);
+}
+.nav a[aria-current="page"]{
+  background:rgba(255,255,255,.06);
+  border-color:rgba(159,183,255,.30);
+  color:var(--accent2);
+}
+
+/* LANGUAGE SWITCHER */
+.langSwitch{
+  display:flex;
+  gap:6px;
+  align-items:center;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--line);
+}
+.langSwitch button{
+  font-size:11px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--muted);
+  background:transparent;
+  border:none;
+  cursor:pointer;
+  padding:4px 8px;
+  border-radius:6px;
+  transition:all .15s ease;
+}
+.langSwitch button:hover{
+  background:rgba(255,255,255,.06);
+  color:var(--accent2);
+}
+.langSwitch button.active{
+  background:rgba(159,183,255,.18);
+  color:var(--accent2);
+  font-weight:700;
+}
+
+/* HERO */
+.hero{
+  margin-top:32px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:20px;
+}
+
+.panel{
+  border-radius:var(--radius);
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.04);
+  box-shadow:var(--shadow);
+}
+@media (prefers-color-scheme: light){
+  .panel{ background:rgba(255,255,255,.86); }
+}
+.panel .pad{padding:28px}
+
+.kicker{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.75);
+  margin-bottom:16px;
+}
+@media (prefers-color-scheme: light){
+  .kicker{ color:rgba(11,20,36,.70); }
+}
+
+.title{
+  margin:0;
+  font-size:36px;
+  line-height:1.15;
+  font-weight:850;
+}
+.title em{color:var(--accent);font-style:normal}
+
+.lead{
+  margin-top:16px;
+  font-size:15px;
+  line-height:1.7;
+  color:var(--muted);
+  max-width:74ch;
+}
+
+.anchor{
+  margin-top:22px;
+  padding-left:16px;
+  border-left:3px solid rgba(159,183,255,.45);
+  font-size:15px;
+  line-height:1.65;
+  color:rgba(255,255,255,.86);
+}
+@media (prefers-color-scheme: light){
+  .anchor{ color:rgba(11,20,36,.86); border-left-color:rgba(37,71,255,.45); }
+}
+
+.micro{
+  margin-top:18px;
+  font-size:12px;
+  line-height:1.6;
+  color:rgba(255,255,255,.74);
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+@media (prefers-color-scheme: light){
+  .micro{ color:rgba(11,20,36,.68); }
+}
+.dot{width:4px;height:4px;border-radius:99px;background:rgba(255,255,255,.32)}
+@media (prefers-color-scheme: light){
+  .dot{ background:rgba(11,20,36,.28); }
+}
+.micro a{
+  color:var(--accent2);
+  text-decoration:none;
+  border-bottom:1px solid rgba(159,183,255,.35);
+}
+.micro a:hover{border-bottom-color:rgba(159,183,255,.9)}
+
+/* CTA BUTTONS */
+.ctaBox{
+  margin-top:28px;
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:14px 24px;
+  border-radius:12px;
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-decoration:none;
+  cursor:pointer;
+  border:1px solid;
+  transition:all .2s ease;
+}
+.btnPrimary{
+  background:linear-gradient(135deg,rgba(159,183,255,.22),rgba(159,183,255,.08));
+  color:var(--accent2);
+  border-color:rgba(159,183,255,.35);
+}
+.btnPrimary:hover{
+  transform:translateY(-2px);
+  background:linear-gradient(135deg,rgba(159,183,255,.32),rgba(159,183,255,.14));
+  border-color:rgba(159,183,255,.55);
+  box-shadow:0 12px 28px rgba(159,183,255,.18);
+}
+.btnSecondary{
+  background:rgba(255,255,255,.04);
+  color:var(--muted);
+  border-color:var(--line);
+}
+.btnSecondary:hover{
+  transform:translateY(-1px);
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.18);
+  color:var(--ink);
+}
+
+/* GRIDS */
+.grid2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+  margin-top:24px;
+}
+@media(max-width:768px){
+  .grid2{grid-template-columns:1fr}
+}
+
+.grid3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin-top:24px;
+}
+@media(max-width:900px){
+  .grid3{grid-template-columns:1fr}
+}
+
+/* CARDS */
+.card{
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.03);
+  padding:22px;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+@media (prefers-color-scheme: light){
+  .card{ background:rgba(255,255,255,.72); }
+}
+.card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 16px 42px rgba(0,0,0,.28);
+  border-color:rgba(159,183,255,.35);
+}
+.cardIcon{
+  width:42px;
+  height:42px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  margin-bottom:16px;
+  background:linear-gradient(135deg,rgba(159,183,255,.16),rgba(159,183,255,.06));
+  border:1px solid rgba(159,183,255,.22);
+}
+.cardTitle{
+  font-size:17px;
+  font-weight:750;
+  margin:0 0 10px;
+  line-height:1.3;
+}
+.cardDesc{
+  font-size:14px;
+  line-height:1.6;
+  color:var(--muted);
+  margin:0;
+}
+
+/* TAGS */
+.tagList{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:16px;
+}
+.tag{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.1em;
+  padding:6px 12px;
+  border-radius:8px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line);
+  color:rgba(255,255,255,.82);
+}
+@media (prefers-color-scheme: light){
+  .tag{
+    background:rgba(11,20,36,.06);
+    color:rgba(11,20,36,.78);
+  }
+}
+
+/* BADGE & CHIPS */
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:11px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  padding:6px 12px;
+  border-radius:8px;
+  font-weight:700;
+}
+.badgeOk{background:rgba(127,224,181,.18);color:var(--ok);border:1px solid rgba(127,224,181,.35)}
+.badgeWarn{background:rgba(255,211,138,.18);color:var(--warn);border:1px solid rgba(255,211,138,.35)}
+.badgeRisk{background:rgba(255,122,122,.18);color:var(--risk);border:1px solid rgba(255,122,122,.35)}
+
+.chipList{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+.chip{
+  font-size:12px;
+  padding:7px 14px;
+  border-radius:999px;
+  background:rgba(159,183,255,.12);
+  border:1px solid rgba(159,183,255,.28);
+  color:var(--accent2);
+  text-decoration:none;
+  transition:all .15s ease;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.chip:hover{
+  background:rgba(159,183,255,.20);
+  border-color:rgba(159,183,255,.45);
+  transform:translateY(-1px);
+}
+.chip svg{
+  width:14px;
+  height:14px;
+  fill:currentColor;
+}
+
+/* SECTIONS */
+.section{margin-top:48px}
+.sectionHead{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:20px;
+}
+.sectionIcon{
+  font-size:28px;
+  line-height:1;
+}
+.sectionTitle{
+  font-size:24px;
+  font-weight:800;
+  letter-spacing:.04em;
+  margin:0;
+}
+.sectionTitle em{color:var(--accent);font-style:normal}
+.sectionDesc{
+  font-size:14px;
+  line-height:1.7;
+  color:var(--muted);
+  margin-top:8px;
+  max-width:68ch;
+}
+
+/* FAQ */
+.faqItem{
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.03);
+  margin-bottom:12px;
+  overflow:hidden;
+  transition:all .2s ease;
+}
+@media (prefers-color-scheme: light){
+  .faqItem{ background:rgba(255,255,255,.72); }
+}
+.faqItem:hover{
+  border-color:rgba(159,183,255,.25);
+}
+.faqQ{
+  padding:18px 22px;
+  cursor:pointer;
+  font-size:15px;
+  font-weight:700;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  user-select:none;
+}
+.faqQ::after{
+  content:'▾';
+  transition:transform .2s ease;
+  opacity:.6;
+}
+.faqItem.open .faqQ::after{
+  transform:rotate(180deg);
+}
+.faqA{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .3s ease;
+  padding:0 22px;
+  font-size:14px;
+  line-height:1.7;
+  color:var(--muted);
+}
+.faqItem.open .faqA{
+  max-height:800px;
+  padding:0 22px 18px;
+}
+
+/* FOOTER */
+.rodape{
+  margin-top:70px;
+  padding-top:40px;
+  border-top:1px solid var(--line);
+}
+.rodapeGrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:32px;
+}
+.rodapeCol h4{
+  font-size:13px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  font-weight:800;
+  margin:0 0 16px;
+  color:var(--accent2);
+}
+.rodapeCol ul{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+.rodapeCol ul li{
+  margin-bottom:10px;
+}
+.rodapeCol ul a{
+  font-size:14px;
+  color:var(--muted);
+  text-decoration:none;
+  transition:color .15s ease;
+}
+.rodapeCol ul a:hover{
+  color:var(--accent2);
+}
+.rodapeMeta{
+  margin-top:38px;
+  padding-top:24px;
+  border-top:1px solid var(--line);
+  font-size:12px;
+  color:rgba(255,255,255,.65);
+  line-height:1.7;
+}
+@media (prefers-color-scheme: light){
+  .rodapeMeta{ color:rgba(11,20,36,.60); }
+}
+
+/* MODAL SIMPLES */
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:999;
+  background:rgba(0,0,0,.75);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.modal.active{display:flex}
+.modalBox{
+  background:var(--panel);
+  border-radius:var(--radius);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  max-width:580px;
+  width:100%;
+  padding:32px;
+}
+.modalHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:22px;
+}
+.modalHeader h3{
+  margin:0;
+  font-size:20px;
+  font-weight:800;
+}
+.modalClose{
+  background:transparent;
+  border:none;
+  font-size:24px;
+  color:var(--muted);
+  cursor:pointer;
+  padding:0;
+  line-height:1;
+  transition:color .15s ease;
+}
+.modalClose:hover{color:var(--ink)}
+.formGroup{
+  margin-bottom:18px;
+}
+.formGroup label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:8px;
+  letter-spacing:.06em;
+}
+.formGroup input,
+.formGroup textarea{
+  width:100%;
+  padding:12px 16px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.04);
+  color:var(--ink);
+  font-size:14px;
+  font-family:var(--sans);
+  transition:border-color .15s ease, background .15s ease;
+}
+@media (prefers-color-scheme: light){
+  .formGroup input,
+  .formGroup textarea{
+    background:rgba(11,20,36,.04);
+  }
+}
+.formGroup input:focus,
+.formGroup textarea:focus{
+  outline:none;
+  border-color:rgba(159,183,255,.55);
+  background:rgba(255,255,255,.07);
+}
+.formGroup textarea{
+  resize:vertical;
+  min-height:90px;
+}
+.formActions{
+  margin-top:24px;
+  display:flex;
+  gap:10px;
+}
+
+/* CHATBOT */
+.chatToggle{
+  position:fixed;
+  bottom:24px;
+  right:24px;
+  z-index:50;
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  background:linear-gradient(135deg,rgba(159,183,255,.28),rgba(159,183,255,.12));
+  border:2px solid rgba(159,183,255,.45);
+  box-shadow:0 8px 28px rgba(159,183,255,.32);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:all .22s ease;
+}
+.chatToggle:hover{
+  transform:scale(1.08);
+  box-shadow:0 12px 38px rgba(159,183,255,.42);
+}
+.chatToggle svg{
+  width:28px;
+  height:28px;
+  fill:var(--accent2);
+}
+
+.chatWindow{
+  position:fixed;
+  bottom:100px;
+  right:24px;
+  z-index:50;
+  width:400px;
+  max-width:calc(100vw - 48px);
+  height:560px;
+  max-height:calc(100vh - 140px);
+  border-radius:var(--radius);
+  border:1px solid var(--line);
+  background:var(--panel);
+  box-shadow:0 24px 68px rgba(0,0,0,.55);
+  display:none;
+  flex-direction:column;
+  overflow:hidden;
+}
+.chatWindow.active{display:flex}
+
+.chatHeader{
+  padding:18px 22px;
+  background:rgba(255,255,255,.05);
+  border-bottom:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+@media (prefers-color-scheme: light){
+  .chatHeader{ background:rgba(11,20,36,.04); }
+}
+.chatHeader h4{
+  margin:0;
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+.chatHeaderClose{
+  background:transparent;
+  border:none;
+  font-size:20px;
+  color:var(--muted);
+  cursor:pointer;
+  padding:0;
+  line-height:1;
+  transition:color .15s ease;
+}
+.chatHeaderClose:hover{color:var(--ink)}
+
+.chatBody{
+  flex:1;
+  overflow-y:auto;
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+.chatMessage{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+}
+.chatMessage.bot{flex-direction:row}
+.chatMessage.user{flex-direction:row-reverse}
+
+.chatMessageAvatar{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:linear-gradient(135deg,rgba(159,183,255,.22),rgba(159,183,255,.08));
+  border:1px solid rgba(159,183,255,.32);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+.chatMessageAvatar svg{
+  width:20px;
+  height:20px;
+  fill:var(--accent2);
+}
+
+.chatMessageContent{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.chatBubbleText{
+  padding:12px 16px;
+  border-radius:14px;
+  font-size:13px;
+  line-height:1.6;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line);
+  color:var(--ink);
+}
+@media (prefers-color-scheme: light){
+  .chatBubbleText{ background:rgba(11,20,36,.05); }
+}
+.chatMessage.user .chatBubbleText{
+  background:linear-gradient(135deg,rgba(159,183,255,.20),rgba(159,183,255,.10));
+  border-color:rgba(159,183,255,.35);
+}
+
+.chatOptions{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.chatOption{
+  padding:12px 14px;
+  border-radius:12px;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--line);
+  cursor:pointer;
+  transition:all .15s ease;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:13px;
+}
+.chatOption:hover{
+  background:rgba(159,183,255,.12);
+  border-color:rgba(159,183,255,.35);
+  transform:translateX(4px);
+}
+.chatOption .emoji{
+  font-size:18px;
+  line-height:1;
+}
+
+.chatRecommendation{
+  padding:16px;
+  border-radius:12px;
+  background:linear-gradient(135deg,rgba(159,183,255,.14),rgba(159,183,255,.06));
+  border:1px solid rgba(159,183,255,.32);
+}
+.chatRecommendation strong{
+  display:block;
+  font-size:14px;
+  margin-bottom:8px;
+  color:var(--accent2);
+}
+.chatRecommendation p{
+  font-size:12px;
+  line-height:1.6;
+  color:var(--muted);
+  margin:0 0 12px;
+}
+.chatRecommendation a{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  font-weight:700;
+  color:var(--accent2);
+  text-decoration:none;
+  border-bottom:1px solid rgba(159,183,255,.35);
+  transition:border-color .15s ease;
+}
+.chatRecommendation a:hover{
+  border-bottom-color:rgba(159,183,255,.75);
+}
+
+.chatReset{
+  margin-top:8px;
+}
+.chatReset button{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line);
+  color:var(--muted);
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.06em;
+  cursor:pointer;
+  transition:all .15s ease;
+}
+.chatReset button:hover{
+  background:rgba(255,255,255,.10);
+  border-color:rgba(255,255,255,.20);
+  color:var(--ink);
+}
+
+/* RESPONSIVIDADE */
+@media(max-width:640px){
+  .title{font-size:28px}
+  .sectionTitle{font-size:20px}
+  .topbar .inner{flex-wrap:wrap}
+  .brand{min-width:auto}
+}
+</style>
+</head>
+
+<body>
+<div style="display:none">
+  Autor: Guilherme Rafael de Souza Araujo
+  Portal Institucional de Leitura Regulatória — AUCTORIS
+  Soberania Informacional
+  Integridade Decisória
+  Accountability Algorítmica
+  ORCID: 0009-0004-4756-1515
+  DOI: 10.5281/zenodo.18209252
+</div>
+<div class="gridFX"></div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="inner">
+    <div class="brand">
+      <h1>AUCTORIS</h1>
+      <p>Leitura Regulatória & Integridade Decisória</p>
+    </div>
+    <nav class="nav">
+      <a href="index.html" aria-current="page">Portal</a>
+      <a href="termometro.html">Termômetro</a>
+      <a href="palestra.html">Palestra</a>
+      <a href="autor.html">Autor</a>
+      <div class="langSwitch">
+        <button class="langBtn active" data-target="pt">Português</button>
+        <button class="langBtn" data-target="en" onclick="location.href='index-en.html'">English</button>
+      </div>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="panel">
+    <div class="pad">
+      <div class="kicker">SISTEMA INSTITUCIONAL</div>
+      <h2 class="title">Leitura Regulatória & <em>Integridade Decisória</em></h2>
+      <p class="lead">
+        Sistema institucional de leitura decisória, padrões sancionatórios e coerência normativa. 
+        Rastreabilidade probatória, supervisão contínua e accountability algorítmica para infraestruturas críticas.
+        Módulos públicos e acesso institucional controlado por organização.
+      </p>
+      <div class="anchor">
+        Portal institucional de leitura regulatória e integridade decisória.
+        Autoria e curadoria: Guilherme Rafael de Souza Araujo.
+        Eixos: soberania informacional, cibergovernança financeira, integridade informacional e accountability algorítmica.
+      </div>
+      <div class="ctaBox">
+        <a href="termometro.html" class="btn btnPrimary">
+          <span>Acessar Termômetro</span>
+          <span>→</span>
+        </a>
+        <button class="btn btnSecondary" onclick="abrirAcesso()">
+          <span>Acesso Institucional</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MÓDULOS PRINCIPAIS -->
+<section class="section">
+  <div class="sectionHead">
+    <div class="sectionIcon">⚖️</div>
+    <div>
+      <h3 class="sectionTitle">Módulos <em>Operacionais</em></h3>
+      <p class="sectionDesc">Leitura pública e acesso institucional controlado por organização.</p>
+    </div>
+  </div>
+
+  <div class="grid3">
+    <div class="card">
+      <div class="cardIcon">📊</div>
+      <h4 class="cardTitle">Termômetro Regulatório</h4>
+      <p class="cardDesc">Leitura contínua de sinais regulatórios, padrões sancionatórios e recorrências decisórias. Atualização mensal, acesso público.</p>
+      <div class="tagList">
+        <span class="tag">PÚBLICO</span>
+        <span class="tag">MENSAL</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cardIcon">🎯</div>
+      <h4 class="cardTitle">Radar Sancionador</h4>
+      <p class="cardDesc">Padrões decisórios e recorrências sancionatórias em ambiente controlado por organização. Análise de coerência e supervisão contínua.</p>
+      <div class="tagList">
+        <span class="tag">RESTRITO</span>
+        <span class="tag">ORGANIZACIONAL</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cardIcon">🛡️</div>
+      <h4 class="cardTitle">Dashboard de Incidente</h4>
+      <p class="cardDesc">Apoio institucional nas primeiras horas: comando, prova, gates decisórios e proteção da cadeia de custódia probatória.</p>
+      <div class="tagList">
+        <span class="tag">RESTRITO</span>
+        <span class="tag">TEMPO REAL</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUTOR & PRODUÇÃO INTELECTUAL -->
+<section class="section" id="autor">
+  <div class="sectionHead">
+    <div class="sectionIcon">📖</div>
+    <div>
+      <h3 class="sectionTitle">Autor & <em>Produção Intelectual</em></h3>
+      <p class="sectionDesc">Autoria institucional, identificadores públicos e produção científica registrada.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="pad">
+      <div class="kicker">IDENTIDADE AUTORAL</div>
+      <h4 style="font-size:20px;font-weight:800;margin:0 0 14px;">Guilherme Rafael de Souza Araujo</h4>
+      <p class="lead">
+        Legal Counsel, especialização em governança de dados, cibergovernança e regulação financeira.
+        Atuação em soberania informacional, extraterritorialidade algorítmica e integridade decisória para infraestruturas críticas.
+      </p>
+
+      <div class="chipList">
+        <a href="https://orcid.org/0009-0004-4756-1515" target="_blank" class="chip">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947s-.422.947-.947.947a.95.95 0 0 1-.947-.947c0-.525.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.016-5.325 5.016h-3.919V7.416z"/></svg>
+          ORCID
+        </a>
+        <a href="https://scholar.google.com/citations?user=VmGXJUwAAAAJ&hl=pt-BR&authuser=1" target="_blank" class="chip">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 9a8 8 0 0 1 7.162 4.44L24 9.5z"/></svg>
+          Google Scholar
+        </a>
+        <a href="https://doi.org/10.5281/zenodo.18209252" target="_blank" class="chip">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          DOI Working Paper
+        </a>
+      </div>
+
+      <div style="margin-top:32px">
+        <div class="kicker">PRODUÇÃO INTELECTUAL</div>
+        
+        <div style="margin-bottom:24px">
+          <h5 style="font-size:16px;font-weight:800;margin:0 0 8px;color:var(--accent2)">Working Paper (2026)</h5>
+          <p style="font-size:14px;line-height:1.7;color:var(--muted);margin:0">
+            Registro público de autoria e delimitação conceitual: soberania informacional, extraterritorialidade algorítmica e governança de dados em infraestruturas críticas.
+          </p>
+          <div class="micro" style="margin-top:10px">
+            <span>DOI:</span>
+            <a href="https://doi.org/10.5281/zenodo.18209252" target="_blank">10.5281/zenodo.18209252</a>
+          </div>
+        </div>
+
+        <div>
+          <h5 style="font-size:16px;font-weight:800;margin:0 0 8px;color:var(--accent2)">Livros Aprovados</h5>
+          <p style="font-size:13px;line-height:1.7;color:var(--muted);margin:0 0 14px">
+            Editora Juspodivm — em desenvolvimento editorial, publicação prevista para 2026 conforme cronograma interno.
+          </p>
+          <ul style="list-style:none;padding:0;margin:0">
+            <li style="padding:10px 0;border-bottom:1px solid var(--line)">
+              <strong style="font-size:14px;color:var(--ink)">Guerra dos Dados</strong><br>
+              <span style="font-size:12px;color:var(--muted)">Soberania Informacional & Sistema Financeiro</span>
+            </li>
+            <li style="padding:10px 0">
+              <strong style="font-size:14px;color:var(--ink)">Direito de Trânsito Aplicado</strong><br>
+              <span style="font-size:12px;color:var(--muted)">Defesa Administrativa e Judicial, Prova Técnica, Execução Fiscal e Governança Institucional no Trânsito</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="ctaBox" style="margin-top:28px">
+        <a href="autor.html" class="btn btnPrimary">
+          <span>Ver página do autor</span>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ENIGMA (menção controlada) -->
+<section class="section">
+  <div class="sectionHead">
+    <div class="sectionIcon">🔐</div>
+    <div>
+      <h3 class="sectionTitle">ENIGMA <em>(Interno)</em></h3>
+      <p class="sectionDesc">Módulo interno de integridade autoral e editorial. Auditoria de produção, rastreabilidade probatória e verificação de autenticidade institucional.</p>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="pad">
+      <p class="lead">Sistema de auditoria autoral em consolidação. Acesso restrito a ambiente institucional controlado.</p>
+      <div class="tagList">
+        <span class="tag">INTERNO</span>
+        <span class="tag">CONSOLIDAÇÃO</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="sectionHead">
+    <div class="sectionIcon">❓</div>
+    <div>
+      <h3 class="sectionTitle">Perguntas <em>Frequentes</em></h3>
+    </div>
+  </div>
+
+  <div class="faqItem">
+    <div class="faqQ" onclick="toggleFaq(this)">O que é o AUCTORIS?</div>
+    <div class="faqA">Sistema institucional de leitura decisória, padrões sancionatórios e coerência normativa. Opera em módulos públicos e restritos por organização.</div>
+  </div>
+
+  <div class="faqItem">
+    <div class="faqQ" onclick="toggleFaq(this)">Como acessar o Termômetro Regulatório?</div>
+    <div class="faqA">O Termômetro é público e acessível através do menu principal. Atualização mensal com leitura contínua de sinais regulatórios.</div>
+  </div>
+
+  <div class="faqItem">
+    <div class="faqQ" onclick="toggleFaq(this)">Como solicitar acesso institucional?</div>
+    <div class="faqA">Utilize o botão "Acesso Institucional" no topo desta página. O acesso é controlado por organização e requer validação institucional.</div>
+  </div>
+
+  <div class="faqItem">
+    <div class="faqQ" onclick="toggleFaq(this)">Qual a diferença entre Termômetro e Radar?</div>
+    <div class="faqA">Termômetro: público, mensal, sinais regulatórios gerais. Radar: restrito, contínuo, padrões decisórios e recorrências por organização.</div>
+  </div>
+</section>
+
+<!-- RODAPÉ -->
+<footer class="rodape" id="rodape">
+  <div class="rodapeGrid">
+    <div class="rodapeCol">
+      <h4>Sistema</h4>
+      <ul>
+        <li><a href="index.html">Portal</a></li>
+        <li><a href="termometro.html">Termômetro Regulatório</a></li>
+        <li><a href="palestra.html">Palestra Executiva</a></li>
+        <li><a href="autor.html">Autor</a></li>
+      </ul>
+    </div>
+    <div class="rodapeCol">
+      <h4>Acesso</h4>
+      <ul>
+        <li><a href="#" onclick="abrirAcesso();return false">Acesso Institucional</a></li>
+        <li><a href="#faq">Perguntas Frequentes</a></li>
+      </ul>
+    </div>
+    <div class="rodapeCol">
+      <h4>Contato</h4>
+      <ul>
+        <li><a href="mailto:contato@grsaengine.com">contato@grsaengine.com</a></li>
+        <li><a href="mailto:guilhermegrsaraujo@proton.me">guilhermegrsaraujo@proton.me</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="rodapeMeta">
+    <p>
+      AUCTORIS — Sistema Institucional de Leitura Decisória<br>
+      Autoria intelectual e curadoria institucional: <strong>Guilherme Rafael de Souza Araujo</strong><br>
+      ORCID: <a href="https://orcid.org/0009-0004-4756-1515" target="_blank">0009-0004-4756-1515</a> | 
+      DOI: <a href="https://doi.org/10.5281/zenodo.18209252" target="_blank">10.5281/zenodo.18209252</a>
+    </p>
+  </div>
+</footer>
+
+</div>
+
+<!-- MODAL ACESSO INSTITUCIONAL -->
+<div class="modal" id="modalAcesso">
+  <div class="modalBox">
+    <div class="modalHeader">
+      <h3>Acesso Institucional</h3>
+      <button class="modalClose" onclick="fecharModal()">&times;</button>
+    </div>
+    <form onsubmit="return enviarSolicitacao(event)">
+      <div class="formGroup">
+        <label>Nome Completo</label>
+        <input type="text" required>
+      </div>
+      <div class="formGroup">
+        <label>Organização</label>
+        <input type="text" required>
+      </div>
+      <div class="formGroup">
+        <label>Cargo / Função</label>
+        <input type="text" required>
+      </div>
+      <div class="formGroup">
+        <label>E-mail Institucional</label>
+        <input type="email" required>
+      </div>
+      <div class="formGroup">
+        <label>Motivo da Solicitação</label>
+        <textarea required></textarea>
+      </div>
+      <div class="formActions">
+        <button type="submit" class="btn btnPrimary">Enviar Solicitação</button>
+        <button type="button" class="btn btnSecondary" onclick="fecharModal()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- CHATBOT -->
+<div class="chatToggle" id="chatToggle">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+    <circle cx="9" cy="10" r="1.5"/>
+    <circle cx="15" cy="10" r="1.5"/>
+  </svg>
+</div>
+
+<div class="chatWindow" id="chatWindow">
+  <div class="chatHeader">
+    <h4>Assistente AUCTORIS</h4>
+    <button class="chatHeaderClose" onclick="fecharChat()">&times;</button>
+  </div>
+  <div class="chatBody" id="chatBody"></div>
+</div>
+
+<script>
+// FAQ TOGGLE
+function toggleFaq(el){
+  el.parentElement.classList.toggle('open');
+}
+
+// MODAL ACESSO
+function abrirAcesso(){
+  document.getElementById('modalAcesso').classList.add('active');
+}
+function fecharModal(){
+  document.getElementById('modalAcesso').classList.remove('active');
+}
+function enviarSolicitacao(e){
+  e.preventDefault();
+  alert('Solicitação registrada. Retorno em até 48h úteis via e-mail institucional.');
+  fecharModal();
+  return false;
+}
+
+// LANGUAGE SWITCHER
+document.querySelectorAll('.langBtn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.langBtn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// CHATBOT
+const chatToggle = document.getElementById('chatToggle');
+const chatWindow = document.getElementById('chatWindow');
+const chatBody = document.getElementById('chatBody');
+
+let chatState = {
+  started: false,
+  currentStep: 'welcome',
+  answers: {},
+  lang: 'pt'
+};
+
+const chatFlows = {
+  pt: {
+    welcome: {
+      message: "Olá! 👋 Sou o assistente AUCTORIS. Selecione um foco para roteamento institucional.",
+      question: "Qual seu principal interesse hoje?",
+      options: [
+        { id: 'monitor', emoji: '📊', text: 'Monitorar ambiente regulatório', next: 'monitor' },
+        { id: 'incident', emoji: '🚨', text: 'Responder a incidente de segurança', next: 'incident' },
+        { id: 'training', emoji: '🎓', text: 'Capacitar meu corpo diretivo', next: 'training' },
+        { id: 'understand', emoji: '🔍', text: 'Compreender padrões sancionatórios', next: 'understand' }
+      ]
+    },
+    monitor: {
+      message: "Roteamento: monitoramento e sinais regulatórios.",
+      question: "Nível de acesso desejado?",
+      options: [
+        { id: 'public', emoji: '🌐', text: 'Conteúdo público e gratuito', next: 'recommend_termometro' },
+        { id: 'detailed', emoji: '🔐', text: 'Acesso por organização', next: 'recommend_radar' }
+      ]
+    },
+    incident: {
+      message: "Roteamento: resposta a incidente institucional.",
+      question: "Contexto?",
+      options: [
+        { id: 'active', emoji: '🔴', text: 'Incidente em andamento', next: 'recommend_dashboard' },
+        { id: 'prepare', emoji: '🛡️', text: 'Preparação institucional', next: 'recommend_training_incident' }
+      ]
+    },
+    training: {
+      message: "Roteamento: capacitação executiva.",
+      question: "Eixo prioritário?",
+      options: [
+        { id: 'post_incident', emoji: '⚖️', text: 'Governança pós-incidente', next: 'recommend_palestra' },
+        { id: 'general', emoji: '📋', text: 'Visão geral do sistema', next: 'recommend_overview' }
+      ]
+    },
+    understand: {
+      message: "Roteamento: padrões sancionatórios.",
+      question: "Profundidade?",
+      options: [
+        { id: 'trends', emoji: '📈', text: 'Sinais públicos', next: 'recommend_termometro' },
+        { id: 'deep', emoji: '🎯', text: 'Recorrências e padrões', next: 'recommend_radar' }
+      ]
+    },
+    recommend_termometro: {
+      recommendation: {
+        title: 'Recomendação: Termômetro Regulatório',
+        description: 'Leitura pública e contínua de sinais regulatórios, atualização mensal.',
+        link: 'termometro.html',
+        linkText: 'Acessar Termômetro →'
+      }
+    },
+    recommend_radar: {
+      recommendation: {
+        title: 'Recomendação: Radar Sancionador',
+        description: 'Padrões decisórios e recorrências sancionatórias em ambiente controlado por organização.',
+        link: '#rodape',
+        linkText: 'Contato institucional →'
+      }
+    },
+    recommend_dashboard: {
+      recommendation: {
+        title: 'Recomendação: Dashboard de Incidente',
+        description: 'Apoio institucional nas primeiras horas: comando, prova e gates decisórios.',
+        link: '#rodape',
+        linkText: 'Contato institucional →'
+      }
+    },
+    recommend_training_incident: {
+      recommendation: {
+        title: 'Recomendação: Palestra — Governança Pós-Incidente',
+        description: 'Leitura executiva sobre decisão, prova e proteção institucional em crise.',
+        link: 'palestra.html',
+        linkText: 'Informações institucionais →'
+      }
+    },
+    recommend_palestra: {
+      recommendation: {
+        title: 'Recomendação: Governança Pós-Incidente',
+        description: 'Palestra executiva: decisão, prova e proteção institucional.',
+        link: 'palestra.html',
+        linkText: 'Informações institucionais →'
+      }
+    },
+    recommend_overview: {
+      recommendation: {
+        title: 'Recomendação: Termômetro Regulatório',
+        description: 'Ponto de entrada público para leitura institucional do ambiente regulatório.',
+        link: 'termometro.html',
+        linkText: 'Acessar Termômetro →'
+      }
+    }
+  },
+  en: {
+    welcome: {
+      message: "Hello! 👋 I'm the AUCTORIS assistant. Select a focus for institutional routing.",
+      question: "What is your main interest today?",
+      options: [
+        { id: 'monitor', emoji: '📊', text: 'Monitor the regulatory environment', next: 'monitor' },
+        { id: 'incident', emoji: '🚨', text: 'Respond to a security incident', next: 'incident' },
+        { id: 'training', emoji: '🎓', text: 'Train my executive team', next: 'training' },
+        { id: 'understand', emoji: '🔍', text: 'Understand sanctioning patterns', next: 'understand' }
+      ]
+    },
+    monitor: {
+      message: "Routing: monitoring and regulatory signals.",
+      question: "Desired access level?",
+      options: [
+        { id: 'public', emoji: '🌐', text: 'Public and free content', next: 'recommend_termometro' },
+        { id: 'detailed', emoji: '🔐', text: 'Organization-based access', next: 'recommend_radar' }
+      ]
+    },
+    incident: {
+      message: "Routing: institutional incident response.",
+      question: "Context?",
+      options: [
+        { id: 'active', emoji: '🔴', text: 'Incident ongoing', next: 'recommend_dashboard' },
+        { id: 'prepare', emoji: '🛡️', text: 'Institutional readiness', next: 'recommend_training_incident' }
+      ]
+    },
+    training: {
+      message: "Routing: executive training.",
+      question: "Priority axis?",
+      options: [
+        { id: 'post_incident', emoji: '⚖️', text: 'Post-incident governance', next: 'recommend_palestra' },
+        { id: 'general', emoji: '📋', text: 'Institutional system overview', next: 'recommend_overview' }
+      ]
+    },
+    understand: {
+      message: "Routing: sanctioning patterns.",
+      question: "Depth?",
+      options: [
+        { id: 'trends', emoji: '📈', text: 'Public signals', next: 'recommend_termometro' },
+        { id: 'deep', emoji: '🎯', text: 'Recurrences and patterns', next: 'recommend_radar' }
+      ]
+    },
+    recommend_termometro: {
+      recommendation: {
+        title: 'Recommendation: Regulatory Thermometer',
+        description: 'Public, continuous reading of regulatory signals, updated monthly.',
+        link: 'termometro.html',
+        linkText: 'Access Thermometer →'
+      }
+    },
+    recommend_radar: {
+      recommendation: {
+        title: 'Recommendation: Sanctions Radar',
+        description: 'Decision patterns and sanction recurrences in a controlled organization-based environment.',
+        link: '#rodape',
+        linkText: 'Institutional contact →'
+      }
+    },
+    recommend_dashboard: {
+      recommendation: {
+        title: 'Recommendation: Incident Dashboard',
+        description: 'Institutional support in the first hours: command, evidence, and decision gates.',
+        link: '#rodape',
+        linkText: 'Institutional contact →'
+      }
+    },
+    recommend_training_incident: {
+      recommendation: {
+        title: 'Recommendation: Lecture — Post-Incident Governance',
+        description: 'Executive reading on decision, evidence, and institutional protection in crisis.',
+        link: 'palestra.html',
+        linkText: 'Institutional information →'
+      }
+    },
+    recommend_palestra: {
+      recommendation: {
+        title: 'Recommendation: Post-Incident Governance',
+        description: 'Executive lecture: decision, evidence, and institutional protection.',
+        link: 'palestra.html',
+        linkText: 'Institutional information →'
+      }
+    },
+    recommend_overview: {
+      recommendation: {
+        title: 'Recommendation: Regulatory Thermometer',
+        description: 'Public entry point for institutional reading of the regulatory environment.',
+        link: 'termometro.html',
+        linkText: 'Access Thermometer →'
+      }
+    }
+  }
+};
+
+function getCurrentLang() {
+  const activeLangBtn = document.querySelector('.langBtn.active');
+  return activeLangBtn ? activeLangBtn.dataset.target : 'pt';
+}
+
+function addBotMessage(message, options = null, recommendation = null) {
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'chatMessage bot';
+  
+  let html = `
+    <div class="chatMessageAvatar">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="15.5" cy="9.5" r="1.5"/>
+        <circle cx="8.5" cy="9.5" r="1.5"/>
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.7.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/>
+      </svg>
+    </div>
+    <div class="chatMessageContent">
+      <div class="chatBubbleText">${message}</div>
+  `;
+  
+  if (options) {
+    html += '<div class="chatOptions">';
+    options.forEach(opt => {
+      html += `
+        <div class="chatOption" data-next="${opt.next}">
+          <span class="emoji">${opt.emoji}</span>
+          <span class="text">${opt.text}</span>
+        </div>
+      `;
+    });
+    html += '</div>';
+  }
+  
+  if (recommendation) {
+    const lang = getCurrentLang();
+    const resetText = lang === 'pt' ? 'Começar Novamente' : 'Start Over';
+    html += `
+      <div class="chatRecommendation">
+        <strong>${recommendation.title}</strong>
+        <p>${recommendation.description}</p>
+        <a href="${recommendation.link}">${recommendation.linkText}</a>
+      </div>
+      <div class="chatReset">
+        <button onclick="resetChat()">${resetText}</button>
+      </div>
+    `;
+  }
+  
+  html += '</div></div>';
+  messageDiv.innerHTML = html;
+  
+  chatBody.appendChild(messageDiv);
+  chatBody.scrollTop = chatBody.scrollHeight;
+  
+  if (options) {
+    messageDiv.querySelectorAll('.chatOption').forEach(opt => {
+      opt.addEventListener('click', () => handleOption(opt.dataset.next));
+    });
+  }
+}
+
+function handleOption(next) {
+  const lang = getCurrentLang();
+  const flow = chatFlows[lang];
+  const step = flow[next];
+  
+  if (step.recommendation) {
+    addBotMessage('', null, step.recommendation);
+  } else {
+    setTimeout(() => {
+      addBotMessage(step.message);
+      setTimeout(() => {
+        if (step.question) {
+          const questionDiv = document.createElement('div');
+          questionDiv.className = 'chatMessage bot';
+          questionDiv.innerHTML = `
+            <div class="chatMessageAvatar">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="15.5" cy="9.5" r="1.5"/>
+                <circle cx="8.5" cy="9.5" r="1.5"/>
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.7.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/>
+              </svg>
+            </div>
+            <div class="chatMessageContent">
+              <div class="chatBubbleText">${step.question}</div>
+            </div>
+          `;
+          chatBody.appendChild(questionDiv);
+          chatBody.scrollTop = chatBody.scrollHeight;
+          
+          setTimeout(() => {
+            addBotMessage('', step.options);
+          }, 400);
+        }
+      }, 600);
+    }, 300);
+  }
+  
+  chatState.currentStep = next;
+}
+
+function startChat() {
+  chatState.started = true;
+  chatState.lang = getCurrentLang();
+  const flow = chatFlows[chatState.lang];
+  
+  addBotMessage(flow.welcome.message);
+  setTimeout(() => {
+    addBotMessage(flow.welcome.question, flow.welcome.options);
+  }, 800);
+}
+
+function resetChat() {
+  chatBody.innerHTML = '';
+  chatState = {
+    started: false,
+    currentStep: 'welcome',
+    answers: {},
+    lang: getCurrentLang()
+  };
+  startChat();
+}
+
+chatToggle.addEventListener('click', () => {
+  chatWindow.classList.add('active');
+  if (!chatState.started) {
+    startChat();
+  }
+});
+
+function fecharChat() {
+  chatWindow.classList.remove('active');
+}
+</script>
+
+<!-- BUSCA INTERNA SEMÂNTICA -->
+<input id="searchInput" placeholder="Buscar no portal..." style="display:none">
+<ul id="searchResults" style="display:none"></ul>
+
+<script>
+const searchIndex = [
+  { label: "Guilherme Rafael de Souza Araujo", link: "autor.html" },
+  { label: "Autor", link: "autor.html" },
+  { label: "AUCTORIS", link: "index.html" },
+  { label: "Portal Institucional de Leitura Regulatória", link: "index.html" },
+  { label: "Soberania Informacional", link: "autor.html" },
+  { label: "Integridade Decisória", link: "index.html" },
+  { label: "Accountability Algorítmica", link: "autor.html" },
+  { label: "Termômetro Regulatório", link: "termometro.html" },
+  { label: "Radar Sancionador", link: "#rodape" },
+  { label: "Dashboard de Incidente", link: "#rodape" }
+];
+
+const input = document.getElementById("searchInput");
+const results = document.getElementById("searchResults");
+
+input?.addEventListener("input", () => {
+  const q = input.value.toLowerCase();
+  results.innerHTML = "";
+  if (!q) return;
+
+  searchIndex
+    .filter(i => i.label.toLowerCase().includes(q))
+    .forEach(i => {
+      const li = document.createElement("li");
+      li.innerHTML = `<a href="${i.link}">${i.label}</a>`;
+      results.appendChild(li);
+    });
+});
+</script>
+
+</body>
+</html>
