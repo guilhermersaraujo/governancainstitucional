@@ -1,0 +1,31 @@
+{
+  "documento": "Termômetro Regulatório AUCTORIS 2026.1",
+  "autor": "Guilherme Rafael de Souza Araujo",
+  "orcid": "0009-0004-4756-1515",
+  "doi": "10.5281/zenodo.18209252",
+  "email": [
+    "contato@grsaengine.com",
+    "guilhermegrsaraujo@proton.me"
+  ],
+  "linkedin": "linkedin.com/in/guilhermersaraujo",
+  "data_criacao": "2026-01-10",
+  "edicao": "2026.1",
+  "hash_sha256": "9987033604b8d7d3a8585020d9537215e1b86e167174dea90339b3aab5ab66ef",
+  "timestamp": "2026-01-11T11:11:43.729839",
+  "protecao_legal": {
+    "brasil": "Lei 9.610/98",
+    "internacional": "Convenção de Berna",
+    "copyright": "© 2026 Guilherme Rafael de Souza Araujo"
+  },
+  "uso_permitido": [
+    "Citação acadêmica com atribuição",
+    "Compartilhamento de link",
+    "Referência com DOI/ORCID"
+  ],
+  "uso_proibido": [
+    "Reprodução sem autorização",
+    "Uso comercial não autorizado",
+    "Scraping automatizado",
+    "Treinamento de IA sem permissão"
+  ]
+}
