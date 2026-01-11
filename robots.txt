@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://guilhermersaraujo.github.io/governancainstitucional/sitemap.xml
